@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="fi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Hautatietohaun avustaja</title>
+<style>
+:root{--bg:#f4f4f0;--card:#fff;--ink:#222;--muted:#666;--line:#d8d8d0;--acc:#2f5d8a;--acc2:#e9f0f7;--ok:#2e7d32;--warn:#b26a00;--off:#999}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.45 system-ui,"Segoe UI",Arial,sans-serif}
+header{background:var(--acc);color:#fff;padding:14px 20px;display:flex;justify-content:space-between;align-items:flex-start;gap:16px;flex-wrap:wrap}
+header>div{flex:1 1 520px;min-width:0}
+header .help{color:#fff;margin-top:4px;border:1px solid rgba(255,255,255,.7);border-radius:5px;padding:6px 12px;text-decoration:none;font-size:14px;white-space:nowrap}
+header .help:hover{background:rgba(255,255,255,.15)}
+header h1{margin:0;font-size:20px;font-weight:600}
+header p{margin:4px 0 0;font-size:13px;opacity:.9}
+main{max-width:1100px;margin:0 auto;padding:16px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:8px;padding:16px;margin-bottom:16px}
+h2{font-size:16px;margin:0 0 10px}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:10px;align-items:end}
+.grid>div{display:flex;flex-direction:column;justify-content:flex-end}
+label{display:block;font-size:12px;color:var(--muted);margin-bottom:3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+input[type=text],input[type=number]{width:100%;padding:7px 9px;border:1px solid var(--line);border-radius:5px;font:inherit}
+input:focus{outline:2px solid var(--acc2);border-color:var(--acc)}
+.row{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-top:12px}
+button{font:inherit;padding:8px 14px;border-radius:5px;border:1px solid var(--acc);background:var(--acc);color:#fff;cursor:pointer}
+button.sec{background:#fff;color:var(--acc)}
+button.small{padding:4px 9px;font-size:13px}
+button:disabled{opacity:.5;cursor:default}
+.chips{display:flex;flex-wrap:wrap;gap:6px;margin-top:6px}
+.chip{background:var(--acc2);border:1px solid #c5d5e6;border-radius:14px;padding:2px 10px;font-size:13px}
+.chip b{cursor:pointer;margin-left:6px;color:var(--acc)}
+.sugg{position:absolute;top:100%;left:0;background:#fff;border:1px solid var(--line);border-radius:5px;max-height:220px;overflow:auto;z-index:5;width:100%;box-shadow:0 4px 12px rgba(0,0,0,.1)}
+.sugg div{padding:5px 9px;cursor:pointer;font-size:14px}
+.sugg div:hover,.sugg div.act{background:var(--acc2)}
+.sugg small{color:var(--muted)}
+.sugg .hd{font-size:11px;color:var(--muted);background:#fafaf7;cursor:default;border-bottom:1px solid var(--line)}
+.sugg .hd:hover{background:#fafaf7}
+.rel{position:relative}
+table{width:100%;border-collapse:collapse;font-size:14px}
+th,td{text-align:left;padding:7px 8px;border-top:1px solid var(--line);vertical-align:top}
+th{font-size:12px;color:var(--muted);font-weight:600;border-top:0}
+.st{display:inline-block;font-size:12px;color:var(--muted);white-space:nowrap}
+.st::before{content:"●";font-size:9px;margin-right:4px;vertical-align:1px}
+.st.dir::before{color:var(--ok)}
+.st.clip::before{color:var(--warn)}
+.st.none::before{color:var(--off)}
+.btn{display:inline-block;font:inherit;font-size:13px;padding:5px 11px;border-radius:5px;border:1px solid var(--acc);background:var(--acc);color:#fff!important;text-decoration:none;white-space:nowrap;cursor:pointer}
+.btn:hover{background:#264c72}
+.btn.sec{background:#fff;color:var(--acc)!important}
+.btn.sec:hover{background:var(--acc2)}
+tr.dim .btn{background:#fff;color:var(--off)!important;border-color:var(--off)}
+tr.dim td{color:var(--off)}
+tr.dim a{color:var(--off)}
+a{color:var(--acc)}
+.note{font-size:13px;color:var(--muted)}
+.cov{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:10px}
+.cov>div{border:1px solid var(--line);border-radius:6px;padding:10px;font-size:14px}
+.cov>div.yes{border-left:4px solid var(--ok)}
+.cov>div.no{border-left:4px solid var(--off);color:var(--off)}
+.cov>div{display:flex;flex-direction:column}
+.cov .act{margin-top:auto;padding-top:10px}
+.cov .act .btn{font-size:13px}
+.cov div h3{margin:0 0 6px;font-size:14px}
+.cov ul{margin:4px 0 0 16px;padding:0;font-size:13px}
+details summary{cursor:pointer;color:var(--acc);font-size:14px}
+.toast{position:fixed;bottom:16px;left:50%;transform:translateX(-50%);background:#333;color:#fff;padding:8px 14px;border-radius:6px;font-size:14px;opacity:0;transition:opacity .3s;pointer-events:none}
+.toast.show{opacity:1}
+footer{font-size:12px;color:var(--muted);padding:10px 0 30px;text-align:center}
+footer a{color:var(--acc);text-decoration:none}
+footer a:hover{text-decoration:underline}
+</style>
+</head>
+<body>
+<header>
+  <div>
+    <h1>Hautatietohaun avustaja</h1>
+    <p>Sukututkijan apuväline: kertoo, mistä palveluista kunnan hautausmaat löytyvät, ja avaa palvelut oikeaan kohtaan. Kaikki haut tehdään palveluiden omilla sivuilla.</p>
+  </div>
+  <a class="help" href="kayttoohje.html" target="_blank" rel="noopener">Käyttöohje</a>
+</header>
+<main>
+
+<div class="card">
+  <h2>Hakuehdot</h2>
+  <div class="grid">
+    <div><label>Sukunimi</label><input type="text" id="sukunimi" autofocus></div>
+    <div><label>Etunimet</label><input type="text" id="etunimi"></div>
+    <div><label>Syntymävuosi</label><input type="number" id="synt" min="1500" max="2100"></div>
+    <div><label>Kuolinvuosi</label><input type="number" id="kuol" min="1500" max="2100"></div>
+    <div class="rel"><label>Kunta tai entinen kunta</label><input type="text" id="kunta" autocomplete="off" aria-describedby="kuntaohje"><div class="sugg" id="sugg" hidden></div></div>
+  </div>
+  <div class="note" id="kuntaohje" style="margin-top:4px">Kunta: kirjoita nimen alku ja valitse ehdotuksesta. Valitut kunnat näkyvät alla, ja niiden kattavuus eri palveluissa avautuu heti.</div>
+  <div class="chips" id="chips"></div>
+  <p class="note" style="margin:8px 0 0">Anna vähintään sukunimi tai kunta (kuntia voi valita useita). Pelkällä kunnalla näet, mitkä palvelut kattavat kunnan hautausmaat, ja saat linkit suoraan niihin.</p>
+  <div class="row">
+    <button id="hae">Hae</button>
+    <button class="sec" id="tyhjenna">Tyhjennä</button>
+    <span class="note" id="tila"></span>
+  </div>
+</div>
+
+<div class="card" id="kattavuus" hidden>
+  <h2>Kattavuus valituissa kunnissa</h2>
+  <p class="note">Vihreä reuna = palvelussa on valittujen kuntien hautausmaita. Avaa palvelu -painike vie palveluun oikeaan kohtaan ilman hakuehtoja; nimihaun painikkeet saat täyttämällä sukunimen ja painamalla Hae.</p>
+  <div class="cov" id="cov"></div>
+</div>
+
+<div class="card" id="linkit" hidden>
+  <h2>Hakulinkit</h2>
+  <p class="note">Painikkeet avaavat palvelun uuteen välilehteen. <span class="st dir">täytetty</span> = palvelun hakusivu aukeaa hakuehdot valmiiksi täytettyinä. <span class="st clip">liitä</span> = palvelu ei tue täytettyä linkkiä: painike avaa hakusivun ja kopioi hakusanan leikepöydälle, josta liität sen hakukenttään (Ctrl+V). Himmennetyissä palveluissa ei ole valitun kunnan hautausmaita – vainaja on silti voitu haudata muualle.</p>
+  <table id="tbl"><thead><tr><th>Palvelu</th><th>Aineisto</th><th>Toiminto</th><th>Ohje</th></tr></thead><tbody></tbody></table>
+</div>
+
+<div class="card">
+  <details>
+    <summary>Asetukset ja tiedot</summary>
+    <div style="margin-top:10px">
+      <p class="note">Avustaja ei hae tietoja palveluista itse; kaikki haut tehdään palveluiden omilla sivuilla. Haudat.fi:hin ei tehdä valmiiksi täytettyä linkkiä, koska palvelun käyttöehdot kieltävät sen ilman lupaa.</p>
+      <p class="note">Kattavuustiedot: <span id="dataInfo"></span>. Voit ladata uudemman <code>kattavuus.json</code>-tiedoston (paivita-kattavuus.py tuottaa sen): <input type="file" id="dataFile" accept=".json"></p>
+    </div>
+  </details>
+</div>
+
+<footer>Hautatietohaun avustaja v0.5 · <a href="kayttoohje.html" target="_blank" rel="noopener">Käyttöohje</a> · linkit ja kattavuus:
+<a href="https://www.hautahaku.fi/fi" target="_blank" rel="noopener">hautahaku.fi</a>,
+<a href="https://hautakartta.fi/" target="_blank" rel="noopener">hautakartta.fi</a>,
+<a href="https://haudat.fi/" target="_blank" rel="noopener">haudat.fi</a>,
+<a href="https://suomenkiha.fi/" target="_blank" rel="noopener">suomenkiha.fi</a>,
+<a href="https://www.genealogia.fi/hautakivitietokanta/" target="_blank" rel="noopener">Suomen Sukututkimusseuran Hautakivitietokanta</a>,
+<a href="https://fi.geneanet.org/siviilihautausmaa/" target="_blank" rel="noopener">Geneanet</a></footer>
+</main>
+<div class="toast" id="toast"></div>
+
+<script>
+var DATA = /*__DATA__*/null;
+
+/* ---------- apufunktiot ---------- */
+function $(id){return document.getElementById(id)}
+function esc(s){return String(s==null?'':s).replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]})}
+function toast(msg){var t=$('toast');t.textContent=msg;t.classList.add('show');clearTimeout(t._h);t._h=setTimeout(function(){t.classList.remove('show')},2200)}
+function copy(text){
+  if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(text).then(function(){toast('Kopioitu leikepöydälle: '+text)},function(){fallbackCopy(text)})}
+  else fallbackCopy(text)
+}
+function fallbackCopy(text){var ta=document.createElement('textarea');ta.value=text;document.body.appendChild(ta);ta.select();try{document.execCommand('copy');toast('Kopioitu leikepöydälle: '+text)}catch(e){toast('Kopiointi ei onnistunut – kirjoita: '+text)}document.body.removeChild(ta)}
+function norm(s){return (s||'').toLowerCase().replace(/\s+/g,' ').trim()}
+function baseName(city){return city.split('/')[0].trim()}
+
+/* ---------- kuntaindeksi upotetusta datasta ---------- */
+var IDX = {};   // kunta -> {hautahaku:[{cong,id,cemeteries:[{id,name}]}], hautakartta:[{slug,name}], haudat:[{slug,name}], suomenkiha:[...], genealogia:[...]}
+var ALIAS = {}; // hakunimi (pienillä) -> kunta
+function buildIndex(){
+  IDX={};ALIAS={};
+  function ent(k){k=k.trim();if(!IDX[k])IDX[k]={hautahaku:[],hautakartta:[],haudat:[],suomenkiha:[],genealogia:[]};ALIAS[norm(k)]=k;return IDX[k]}
+  var m=DATA.mapping||{};
+  DATA.hautahaku.forEach(function(c){
+    var byK={};
+    c.cemeteries.forEach(function(g){(byK[g.kunta]=byK[g.kunta]||[]).push(g)});
+    Object.keys(byK).forEach(function(k){ent(k).hautahaku.push({cong:c.name,id:c.id,cemeteries:byK[k]})});
+  });
+  DATA.hautakartta.forEach(function(c){
+    var ks=(m.hautakartta_kunnat||{})[c.slug]||[c.name.replace(/ (seurakunta|seurakunnat|seurakuntayhtymä|tuomiokirkkoseurakunta).*$/i,'').replace(/^Rauman$/,'Rauma')];
+    ks.forEach(function(k){ent(k).hautakartta.push(c)});
+  });
+  DATA.haudat.forEach(function(c){
+    var ks=(m.haudat_kunnat||{})[c.slug]||[c.name];
+    ks.forEach(function(k){ent(k).haudat.push(c)});
+  });
+  DATA.suomenkiha.forEach(function(s){
+    if(s.city==='Testi')return;
+    var k=baseName(s.city);ent(k).suomenkiha.push(s);
+    ALIAS[norm(s.city)]=k;
+    s.city.split('/').forEach(function(p){ALIAS[norm(p)]=k});
+  });
+  (DATA.genealogia||[]).forEach(function(g){ent(g.kunta).genealogia.push(g)});
+  Object.keys(m.entinen_kunta||{}).forEach(function(old){
+    var cur=m.entinen_kunta[old];
+    if(IDX[cur]){ if(!IDX[old]) ent(old); IDX[old].nykyinen=cur; }
+  });
+}
+
+/* ---------- kuntavalinta ---------- */
+var chosen=[];
+function suggest(q){
+  q=norm(q);var box=$('sugg');
+  if(!q){box.hidden=true;return}
+  var hits=[],seen={};
+  Object.keys(ALIAS).forEach(function(a){
+    if(a.indexOf(q)===0){var k=ALIAS[a];if(!seen[k]){seen[k]=1;hits.push(k)}}
+  });
+  Object.keys(ALIAS).forEach(function(a){
+    if(a.indexOf(q)>0){var k=ALIAS[a];if(!seen[k]){seen[k]=1;hits.push(k)}}
+  });
+  hits=hits.slice(0,12);
+  if(!hits.length){box.hidden=true;return}
+  box.innerHTML='<div class="hd">Valitse kunta klikkaamalla tai nuolinäppäimillä ja Enterillä</div>'+hits.map(function(k){
+    var e=IDX[k],tags=[];
+    if(e.hautahaku.length)tags.push('hautahaku.fi');if(e.hautakartta.length)tags.push('hautakartta.fi');if(e.haudat.length)tags.push('haudat.fi');
+    if(e.suomenkiha.length||e.genealogia.some(function(g){return g.photographed>0}))tags.push('kuvia');if(e.nykyinen)tags.push('→ '+e.nykyinen);
+    return '<div data-k="'+esc(k)+'">'+esc(k)+' <small>'+esc(tags.join(' · '))+'</small></div>'
+  }).join('');
+  box.hidden=false;
+}
+function addKunta(k){
+  if(!k||chosen.indexOf(k)>=0)return;
+  chosen.push(k);
+  var e=IDX[k];
+  if(e&&e.nykyinen&&chosen.indexOf(e.nykyinen)<0){chosen.push(e.nykyinen);toast(k+' kuuluu nykyään kuntaan '+e.nykyinen+' – lisätty molemmat')}
+  renderChips();$('kunta').value='';$('sugg').hidden=true;renderCoverage();
+}
+function renderChips(){
+  $('chips').innerHTML=chosen.map(function(k){return '<span class="chip">'+esc(k)+'<b data-k="'+esc(k)+'" title="Poista">×</b></span>'}).join('');
+}
+$('kunta').addEventListener('input',function(){suggest(this.value)});
+$('kunta').addEventListener('blur',function(){var self=this;setTimeout(function(){var q=norm(self.value);if(!q)return;if(ALIAS[q]){addKunta(ALIAS[q]);return}var hits=[],seen={};Object.keys(ALIAS).forEach(function(a){if(a.indexOf(q)===0){var k=ALIAS[a];if(!seen[k]){seen[k]=1;hits.push(k)}}});if(hits.length===1)addKunta(hits[0])},150)});
+$('kunta').addEventListener('keydown',function(e){
+  var box=$('sugg'),items=box.querySelectorAll('div[data-k]'),act=box.querySelector('.act'),i=Array.prototype.indexOf.call(items,act);
+  if(e.key==='ArrowDown'){e.preventDefault();if(items.length){if(act)act.classList.remove('act');items[(i+1)%items.length].classList.add('act')}}
+  else if(e.key==='ArrowUp'){e.preventDefault();if(items.length){if(act)act.classList.remove('act');items[(i-1+items.length)%items.length].classList.add('act')}}
+  else if(e.key==='Enter'){e.preventDefault();if(act)addKunta(act.getAttribute('data-k'));else if(items.length===1)addKunta(items[0].getAttribute('data-k'));else{var q=norm(this.value);if(ALIAS[q])addKunta(ALIAS[q]);}}
+  else if(e.key==='Escape'){box.hidden=true}
+});
+$('sugg').addEventListener('mousedown',function(e){var d=e.target.closest('div[data-k]');if(d)addKunta(d.getAttribute('data-k'))});
+$('chips').addEventListener('click',function(e){if(e.target.tagName==='B'){chosen=chosen.filter(function(k){return k!==e.target.getAttribute('data-k')});renderChips();renderCoverage()}});
+document.addEventListener('click',function(e){if(!e.target.closest('.rel'))$('sugg').hidden=true});
+
+/* ---------- kattavuuskortti ---------- */
+function coverageFor(kunnat){
+  var c={hautahaku:[],hautakartta:[],haudat:[],suomenkiha:[],genealogia:[]};
+  kunnat.forEach(function(k){var e=IDX[k];if(!e)return;['hautahaku','hautakartta','haudat','suomenkiha','genealogia'].forEach(function(s){e[s].forEach(function(x){if(c[s].indexOf(x)<0)c[s].push(x)})})});
+  return c;
+}
+function renderCoverage(){
+  var card=$('kattavuus');
+  if(!chosen.length){card.hidden=true;return}
+  var c=coverageFor(chosen),h='';
+  function box(yes,title,body,url){h+='<div class="'+(yes?'yes':'no')+'"><h3>'+title+'</h3><div>'+body+'</div>'+(url?'<div class="act"><a class="btn'+(yes?'':' sec')+'" href="'+esc(url)+'" target="_blank" rel="noopener">Avaa palvelu ↗</a></div>':'')+'</div>'}
+  var k1=chosen[0]||'';
+  box(c.hautahaku.length,'hautahaku.fi – virallinen hautarekisteri',c.hautahaku.length?c.hautahaku.map(function(x){return '<b>'+esc(x.cong)+'</b><ul>'+x.cemeteries.map(function(g){return '<li>'+esc(g.name)+'</li>'}).join('')+'</ul>'}).join(''):'Ei valittujen kuntien hautausmaita.','https://www.hautahaku.fi/fi');
+  box(c.hautakartta.length,'hautakartta.fi – virallinen hautarekisteri, kartta',c.hautakartta.length?c.hautakartta.map(function(x){return '<b>'+esc(x.name)+'</b><ul>'+x.cemeteries.map(function(g){return '<li>'+esc(g)+'</li>'}).join('')+'</ul>'}).join(''):'Ei valittujen kuntien hautausmaita.',c.hautakartta.length===1?'https://hautakartta.fi/'+c.hautakartta[0].slug+'/':'https://hautakartta.fi/');
+  box(c.haudat.length,'haudat.fi – virallinen hautarekisteri (Vitec)',c.haudat.length?c.haudat.map(function(x){return '<b>'+esc(x.name)+'</b> ('+x.deceased+' vainajaa)<ul>'+x.cemeteries.map(function(g){return '<li>'+esc(g)+'</li>'}).join('')+'</ul>'}).join(''):'Ei valittujen kuntien hautausmaita.',c.haudat.length===1?'https://haudat.fi/forsamling/'+c.haudat[0].slug:'https://haudat.fi/');
+  box(c.suomenkiha.length,'suomenkiha.fi – hautakivikuvat',c.suomenkiha.length?c.suomenkiha.map(function(s){var p=[];if(s.graveyards)p.push(s.graveyards+' hautausmaata');if(s.warCemeteries)p.push(s.warCemeteries+' sankarihautausmaata');if(s.orthodox)p.push(s.orthodox+' ortodoksista');return '<b>'+esc(s.city)+'</b>: '+p.join(', ')+(s.names&&s.names.length?'<ul>'+s.names.map(function(n){return '<li>'+esc(n)+'</li>'}).join('')+'</ul>':'')}).join('<br>'):'Ei hakemistossa tällä kuntanimellä (kokeile entistä kuntaa tai ruotsinkielistä nimeä).','https://suomenkiha.fi/');
+  var gnPhoto=c.genealogia.reduce(function(n,g){return n+(g.photographed||0)},0);
+  box(c.genealogia.length?gnPhoto>0:true,'Hautakivitietokanta (Sukututkimusseura)',c.genealogia.length?c.genealogia.map(function(g){return '<b>'+esc(g.kunta)+'</b>: '+(g.photographed?g.photographed+'/'+g.cemeteries+' hautausmaata kuvattu':'ei vielä kuvattuja hautausmaita ('+g.cemeteries+' hautausmaata Seuran luettelossa)')+(g.cemetery_list?'<ul>'+g.cemetery_list.map(function(x){return '<li>'+esc(x.name)+(x.kuvattu?' ✓ kuvattu':' – ei kuvattu')+(x.prosentti&&x.prosentti!=='0'&&x.prosentti!=='100'?' ('+esc(x.prosentti)+' %)':'')+'</li>'}).join('')+'</ul>':'')}).join('<br>'):'Ei tietoa kunnan tilanteesta Seuran hautausmaaluettelossa.',hautakiviUrl({suku:'',etu:'',synt:'',kuol:''},k1));
+  box(true,'Geneanet – hautausmaat','Suomesta 179 hautausmaata. Maakunnittain: '+Object.keys(DATA.geneanet||{}).map(function(r){return esc(r)+' '+DATA.geneanet[r]}).join(', ')+'.','https://fi.geneanet.org/siviilihautausmaa/geo/FIN/suomi');
+  $('cov').innerHTML=h;card.hidden=false;
+}
+
+/* ---------- linkkien rakentaminen ---------- */
+function q(o){return Object.keys(o).map(function(k){return encodeURIComponent(k)+'='+encodeURIComponent(o[k]==null?'':o[k])}).join('&')}
+function hautakiviUrl(f,kunta){
+  var gp={'op':'Search','[s-c]etunimi':f.etu,'[s-ct]etunimi':'ColumnValueText','[s-ca]etunimi':'enabled','[s-c]patronyymi':'','[s-ct]patronyymi':'ColumnValueText','[s-ca]patronyymi':'enabled',
+    '[s-c]sukunimi':f.suku,'[s-ct]sukunimi':'ColumnValueText','[s-ca]sukunimi':'enabled','[s-c]syntymavuosi':f.synt,'[s-ct]syntymavuosi':'ColumnValueNum','[s-c]kuolinvuosi':f.kuol,'[s-ct]kuolinvuosi':'ColumnValueNum',
+    '[s-c]paikkakunta':kunta||'','[s-ct]paikkakunta':'ColumnValueText','[s-ca]paikkakunta':'enabled','[s-c]talokyla':'','[s-ct]talokyla':'ColumnValueText','[s-ca]talokyla':'enabled','step-selection':'7cd'};
+  return 'https://sukuhaku.genealogia.fi/default.asp?'+q(gp);
+}
+function buildLinks(f){
+  var c=coverageFor(chosen),links=[];
+  var fullHH=(f.suku+' '+f.etu).trim(), fullHK=(f.etu+' '+f.suku).trim();
+
+  /* hautahaku.fi */
+  var hhCov=chosen.length?c.hautahaku.length>0:null;
+  links.push({svc:'hautahaku.fi',data:'Virallinen hautarekisteri, 15 seurakuntataloutta, n. 923 000 hautapaikkaa (mm. Helsinki, Espoo, Tampere, Vaasa, Pori, Kuopio)',
+    cov:hhCov,url:'https://www.hautahaku.fi/fi',mode:fullHH?'clip':'open',clip:fullHH,
+    hint:(fullHH?'Liitä nimi hakukenttään (muoto "Sukunimi Etunimi")':'Kirjoita nimi hakukenttään')+(hhCov?'. Rajaa suodattimesta ylläpitäjä: '+c.hautahaku.map(function(x){return x.cong}).join(', '):'')});
+
+  /* hautakartta.fi */
+  var hkCov=chosen.length?c.hautakartta.length>0:null;
+  if(c.hautakartta.length){
+    c.hautakartta.forEach(function(x){links.push({svc:'hautakartta.fi',data:'Virallinen hautarekisteri ja kartta – '+x.name,cov:true,url:'https://hautakartta.fi/'+x.slug+'/',mode:fullHK?'clip':'open',clip:fullHK,hint:(fullHK?'Liitä nimi Nimi-kenttään (muoto "Etunimi Sukunimi")':'Kirjoita nimi Nimi-kenttään')+'; rajaa tarvittaessa hautausmaa'})});
+  } else {
+    links.push({svc:'hautakartta.fi',data:'Virallinen hautarekisteri ja kartta, 25 seurakuntaa (mm. Turku, Oulu, Lahti, Jyväskylä, Joensuu, Mikkeli, Lappeenranta)',cov:hkCov,url:'https://hautakartta.fi/',mode:fullHK?'clip':'open',clip:fullHK,hint:'Valitse seurakunta ja '+(fullHK?'liitä':'kirjoita')+' nimi (muoto "Etunimi Sukunimi")'});
+  }
+
+  /* haudat.fi */
+  var hdCov=chosen.length?c.haudat.length>0:null;
+  {
+    links.push({svc:'haudat.fi',data:'Virallinen hautarekisteri (Vitec Katrina), 11 seurakuntaa Suomessa',cov:hdCov,url:c.haudat.length===1?'https://haudat.fi/forsamling/'+c.haudat[0].slug:'https://haudat.fi/',mode:f.suku?'clip':'open',clip:f.suku,hint:(f.suku?'Liitä':'Kirjoita')+' sukunimi hakukenttään'+(c.haudat.length?'; seurakunta: '+c.haudat.map(function(x){return x.name}).join(', '):'')+''});
+  }
+
+  /* suomenkiha.fi */
+  var skCov=chosen.length?c.suomenkiha.length>0:null;
+  links.push({svc:'suomenkiha.fi',data:'Hautakivikuvat ja indeksoidut nimet, n. 910 000 vainajaa, lähes koko Suomi',cov:skCov,url:'https://suomenkiha.fi/',mode:f.suku?'clip':'open',clip:f.suku,
+    hint:(f.suku?'Liitä sukunimi, kirjoita etunimet':'Kirjoita sukunimi ja etunimet')+(c.suomenkiha.length?'; hautausmaa-valikossa: '+c.suomenkiha.map(function(s){return s.city}).join(', '):'')});
+
+  /* Hautakivitietokanta */
+  links.push({svc:'Hautakivitietokanta (genealogia.fi)',data:'Hautakivikuvat, yli miljoona hautatietoa, koko Suomi + siirtolaishautoja',cov:chosen.length?(c.genealogia.length?c.genealogia.some(function(g){return g.photographed>0}):null):null,url:hautakiviUrl(f,chosen.length?chosen[0]:''),mode:'dir',
+    hint:'Linkki avaa Hautakivitietokannan hakusivun hakuehdot valmiiksi täytettyinä'+(chosen.length?', paikkakunta "'+chosen[0]+'"':'')});
+
+  /* Geneanet */
+  var gn={'categories_1__cimetieres__':'cimetieres','categories_2__cimetieres#cimetiere__':'cimetieres#cimetiere','country__0__':'FIN','zonegeo__0__':'Suomi','go':1,'nom':f.suku,'prenom':f.etu,'size':50};
+  if(f.synt||f.kuol){gn.type_periode='between';gn.from=f.synt||'';gn.to=f.kuol||''}
+  if(f.suku)links.push({svc:'Geneanet – hautausmaat',data:'Hautakivikuvat, Suomesta 179 hautausmaata, lisäksi ulkomaat',cov:null,url:'https://fi.geneanet.org/fonds/individus/?'+q(gn),mode:'dir',hint:'Linkki avaa Geneanetin hakusivun hakuehdot valmiiksi täytettyinä (koko Suomi)'});
+  else links.push({svc:'Geneanet – hautausmaat',data:'Hautakivikuvat, Suomesta 179 hautausmaata, lisäksi ulkomaat',cov:null,url:'https://fi.geneanet.org/siviilihautausmaa/geo/FIN/suomi',mode:'open',hint:'Suomen hautausmaat maakunnittain'});
+
+  /* järjestys: katetut ensin, sitten tuntemattomat, sitten ei-katetut */
+  var order={true:0,null:1,false:2};
+  links.sort(function(a,b){return order[a.cov]-order[b.cov]});
+  return links;
+}
+function renderLinks(links){
+  var tb=$('tbl').querySelector('tbody');
+  tb.innerHTML=links.map(function(l,i){
+    var st=l.cov===true?'<span class="st dir">kunta katettu</span>':l.cov===false?'<span class="st none">ei valittua kuntaa</span>':'<span class="st dir">koko maa</span>';
+    var mode=l.mode==='dir'?'<span class="st dir">täytetty</span>':l.mode==='open'?'':'<span class="st clip">liitä</span>';
+    var label=l.mode==='dir'?'Avaa haku ↗':l.mode==='open'?'Avaa palvelu ↗':'Avaa ja kopioi ↗';
+    return '<tr class="'+(l.cov===false?'dim':'')+'"><td><b>'+esc(l.svc)+'</b><br>'+st+'</td><td class="note">'+esc(l.data)+'</td>'+
+      '<td><a class="btn'+(l.cov===false?' sec':'')+'" href="'+esc(l.url)+'" target="_blank" rel="noopener" data-i="'+i+'">'+label+'</a><br>'+mode+'</td><td class="note">'+esc(l.hint)+'</td></tr>'
+  }).join('');
+  $('linkit').hidden=false;
+}
+$('tbl').addEventListener('click',function(e){
+  var a=e.target.closest('a[data-i]');if(a){var l=LINKS[+a.getAttribute('data-i')];if(l&&l.clip)copy(l.clip)}
+});
+
+/* ---------- haku ---------- */
+var LINKS=[];
+function doSearch(){
+  var f={suku:$('sukunimi').value.trim(),etu:$('etunimi').value.trim(),synt:$('synt').value.trim(),kuol:$('kuol').value.trim()};
+  var typed=norm($('kunta').value);
+  if(typed&&!chosen.length){if(ALIAS[typed])addKunta(ALIAS[typed]);else{var hits=Object.keys(ALIAS).filter(function(a){return a.indexOf(typed)===0});if(hits.length===1)addKunta(ALIAS[hits[0]]);}}
+  if(typed&&!chosen.length&&!f.suku){toast('Kuntaa "'+$('kunta').value.trim()+'" ei löydy avustajan kattavuustiedoista');$('kattavuus').hidden=false;$('cov').innerHTML='<div class="no"><h3>Ei tietoja</h3>Kuntaa "'+esc($('kunta').value.trim())+'" ei ole yhdenkään palvelun hautausmaaluettelossa nykyisellä tai entisellä nimellään. Kokeile naapurikuntaa, entistä pitäjännimeä tai ruotsinkielistä nimeä.</div>';$('linkit').hidden=true;return}
+  if(!f.suku&&!chosen.length){toast('Anna vähintään sukunimi tai kunta');$('sukunimi').focus();return}
+  LINKS=buildLinks(f);renderLinks(LINKS);
+  $('tila').textContent=(chosen.length?'Kunnat: '+chosen.join(', '):'Ei kuntarajausta')+(f.suku?'':' · ei nimeä, linkit avaavat palvelun');
+  $('linkit').scrollIntoView({behavior:'smooth',block:'start'});
+}
+$('hae').addEventListener('click',doSearch);
+['sukunimi','etunimi','synt','kuol'].forEach(function(id){$(id).addEventListener('keydown',function(e){if(e.key==='Enter')doSearch()})});
+$('tyhjenna').addEventListener('click',function(){['sukunimi','etunimi','synt','kuol','kunta'].forEach(function(id){$(id).value=''});chosen=[];renderChips();renderCoverage();$('linkit').hidden=true;$('tila').textContent='';$('sukunimi').focus()});
+
+/* ---------- datan lataus ---------- */
+function loadKattavuus(j){
+  try{
+    var m=DATA.mapping;
+    DATA={generated:j.generated,
+      hautahaku:(j.hautahaku.congregations||[]).map(function(c){return {id:c.id,name:c.name,cemeteries:c.cemeteries.map(function(g){return {name:g.name,kunta:g.kunta}})}}),
+      hautakartta:(j.hautakartta.congregations||[]).map(function(c){return {slug:c.slug,name:c.name,cemeteries:c.cemeteries}}),
+      haudat:(j.haudat.parishes||[]).map(function(c){return {slug:c.slug,name:c.name,deceased:c.deceased,cemeteries:c.cemeteries.map(function(x){return x.name})}}),
+      suomenkiha:j.suomenkiha.municipalities||[],genealogia:(j.genealogia||{}).municipalities||[],geneanet:(j.geneanet||{}).regions||{},mapping:m};
+    buildIndex();renderCoverage();$('dataInfo').textContent='kattavuus.json, päivitetty '+DATA.generated;toast('Kattavuustiedot päivitetty ('+DATA.generated+')');
+  }catch(e){toast('Tiedoston lukeminen epäonnistui: '+e.message)}
+}
+$('dataFile').addEventListener('change',function(){var fr=new FileReader();fr.onload=function(){try{loadKattavuus(JSON.parse(fr.result))}catch(e){toast('Ei kelvollinen JSON')}};fr.readAsText(this.files[0],'utf-8')});
+
+/* ---------- käynnistys ---------- */
+buildIndex();
+$('dataInfo').textContent='upotettu, päivitetty '+DATA.generated;
+if(location.protocol!=='file:'){fetch('data/kattavuus.json',{cache:'no-store'}).then(function(r){return r.ok?r.json():null}).then(function(j){if(j&&j.generated>DATA.generated)loadKattavuus(j)}).catch(function(){})}
+</script>
+</body>
+</html>
