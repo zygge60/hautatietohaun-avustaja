@@ -85,7 +85,7 @@ Virheilmoitukset ja parannusehdotukset ovat tervetulleita issue-toiminnon kautta
 
 ## Lisenssi
 
-Ohjelmakoodi: valitse lisenssi ennen julkaisua (esimerkiksi MIT). Hautatiedot ovat kunkin palvelun ylläpitäjän aineistoa ja niiden käyttöä säätelevät palveluiden omat käyttöehdot; tässä projektissa on vain palveluiden julkiset hautausmaaluettelot.
+Ohjelmakoodi MIT. Hautatiedot ovat kunkin palvelun ylläpitäjän aineistoa ja niiden käyttöä säätelevät palveluiden omat käyttöehdot; tässä projektissa on vain palveluiden julkiset hautausmaaluettelot.
 
 ## Tekijä
 
