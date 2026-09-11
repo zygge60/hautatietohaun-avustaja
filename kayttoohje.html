@@ -180,10 +180,10 @@
 <p class="top"><a href="index.html">← Avustajaan</a></p>
 <h1 id="hautatietohaun-avustaja-käyttöohje">Hautatietohaun avustaja –
 käyttöohje</h1>
-<p>Versio 0.5 · syyskuu 2026</p>
+<p>Versio 0.8 · syyskuu 2026</p>
 <h2 id="mikä-avustaja-on">Mikä avustaja on</h2>
 <p>Hautatietohaun avustaja on sukututkijan apuväline, joka kokoaa yhteen
-kuusi suomalaisia hautatietoja tarjoavaa verkkopalvelua. Avustaja
+yhdeksän suomalaisia hautatietoja tarjoavaa verkkopalvelua. Avustaja
 kertoo, mistä palveluista etsimäsi kunnan hautausmaat löytyvät, ja avaa
 kunkin palvelun oikeaan kohtaan.</p>
 <p>Avustaja ei hae eikä tallenna hautatietoja itse. Kaikki haut tehdään
@@ -218,32 +218,53 @@ Lappeenranta, Hämeenlinna, Kotka</td>
 </tr>
 <tr class="odd">
 <td>haudat.fi</td>
-<td>Virallinen hautarekisteri (Vitec Katrina)</td>
+<td>Virallinen hautarekisteri (Vitec Katrina). Sama palvelu on ruotsiksi
+osoitteessa gravar.se, joka kattaa myös Ruotsin hautausmaat</td>
 <td>11 pienempää seurakuntaa, mm. Raasepori, Vihti, Inkoo, Muurame,
 Pyhtää, Ranua, Suomussalmi</td>
 </tr>
 <tr class="even">
+<td>opasteapp.fi</td>
+<td>Seurakuntien virallinen hautarekisteri ja aluekartta</td>
+<td>Vantaan seurakunnat, Kerava ja Vihti</td>
+</tr>
+<tr class="odd">
 <td>suomenkiha.fi</td>
 <td>Vapaaehtoisten kuvaamat hautakivet ja niistä indeksoidut nimet</td>
 <td>Lähes koko Suomi, myös lakkautetut kunnat ja luovutettu alue</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td>Hautakivitietokanta (Suomen Sukututkimusseura)</td>
 <td>Hautakivikuvat ja indeksoidut nimet</td>
 <td>Koko Suomi sekä siirtolaishautoja</td>
+</tr>
+<tr class="odd">
+<td>suvusto.fi</td>
+<td>Yksityisen sukututkimussivuston hautakivikuvat sukunimittäin</td>
+<td>Rovaniemi, Kemijärvi, Sodankylä, Salla, Pelkosenniemi ja Savukoski,
+n. 27 600 kuvaa</td>
 </tr>
 <tr class="even">
 <td>Geneanet</td>
 <td>Yhteisöllinen hautakivikokoelma</td>
 <td>Suomesta 179 hautausmaata</td>
 </tr>
+<tr class="odd">
+<td>Find a Grave</td>
+<td>Käyttäjien ylläpitämä kansainvälinen hautamuistomerkkitietokanta
+(Ancestry)</td>
+<td>Suomesta 1 236 hautausmaata; kattavuus vaihtelee suuresti
+(Hietaniemessä yli 150 000 muistomerkkiä, monet pienet hautausmaat lähes
+tyhjiä). Kattaa myös ulkomaille haudatut</td>
+</tr>
 </tbody>
 </table>
-<p>Hautahaku.fi, hautakartta.fi ja haudat.fi kertovat tarkan
-hautapaikan, mutta näyttävät yleensä vain haudat, joiden hallinta-aika
-on voimassa. Hautakivitietokanta (Suomen Sukututkimusseura),
-suomenkiha.fi ja Geneanet sisältävät usein myös tietoja vanhoista ja
-maaseutupaikkakuntien haudoista. Siksi kannattaa katsoa molemmat.</p>
+<p>Hautahaku.fi, hautakartta.fi, haudat.fi ja opasteapp.fi kertovat
+tarkan hautapaikan, mutta näyttävät yleensä vain haudat, joiden
+hallinta-aika on voimassa. Hautakivitietokanta (Suomen
+Sukututkimusseura), suomenkiha.fi, suvusto.fi, Geneanet ja Find a Grave
+sisältävät usein myös tietoja vanhoista ja maaseutupaikkakuntien
+haudoista. Siksi kannattaa katsoa molemmat.</p>
 <h2 id="käyttöönotto">Käyttöönotto</h2>
 <p>Avustajaa voi käyttää kahdella tavalla.</p>
 <p>Verkossa: avustajasta on julkaistu toimiva versio osoitteessa <a
@@ -287,11 +308,11 @@ ja ehdottaa kokeilemaan entistä pitäjännimeä tai ruotsinkielistä
 nimeä.</p>
 <p>Jokaisen laatikon alareunassa on <strong>Avaa palvelu</strong>
 -painike. Se vie palveluun suoraan oikeaan kohtaan ilman hakuehtoja:
-hautakartta.fi:ssä valitun seurakunnan hautakarttaan, haudat.fi:ssä
-seurakunnan sivulle, Hautakivitietokannassa kunnalla rajattuun hakuun ja
-muissa palveluissa hakusivulle. Tämä on hyödyllinen, kun haluat vain
-selata kunnan hautausmaita tai tehdä haun palvelun omilla
-työkaluilla.</p>
+hautakartta.fi:ssä valitun seurakunnan hautakarttaan, haudat.fi:ssä ja
+opasteapp.fi:ssä seurakunnan sivulle, Hautakivitietokannassa kunnalla
+rajattuun hakuun ja muissa palveluissa hakusivulle. Tämä on hyödyllinen,
+kun haluat vain selata kunnan hautausmaita tai tehdä haun palvelun
+omilla työkaluilla.</p>
 <h2 id="hakupainikkeet">Hakupainikkeet</h2>
 <p>Kun olet antanut sukunimen ja painanut Hae, lomakkeen alle ilmestyy
 taulukko, jossa on yksi rivi jokaista palvelua kohti. Rivit on
@@ -303,15 +324,21 @@ muuallekin kuin kotikuntaansa.</p>
 Painikkeen teksti kertoo, mitä tapahtuu:</p>
 <p><strong>Avaa haku</strong> – palvelun hakusivu aukeaa hakuehdot
 valmiiksi täytettyinä ja tulokset näkyvissä. Näin toimivat
-Hautakivitietokanta ja Geneanet.</p>
+Hautakivitietokanta, Geneanet ja Find a Grave. Find a Gravessa haku on
+valmiiksi rajattu Suomeen; jos etsit ulkomaille haudattua, poista
+Finland-rajaus palvelun omalla sivulla. Suvusto.fi:ssä painike avaa
+sukunimen oman sivun, jolla ovat kaikki sen sukunimen hautakivikuvat
+hautausmaittain; jos sukunimeä ei ole aineistossa, sivusto ilmoittaa
+“Sivua ei löydy”.</p>
 <p><strong>Avaa ja kopioi</strong> – palvelu ei tue valmiiksi täytettyä
 linkkiä. Painike avaa palvelun hakusivun ja kopioi samalla hakusanan
 leikepöydälle oikeassa muodossa. Klikkaa avautuneen sivun hakukenttää ja
 liitä (Ctrl+V, Macissa Cmd+V). Ohje-sarake kertoo tarvittaessa
-muotoseikat: hautahaku.fi haluaa nimen muodossa “Sukunimi Etunimi”,
-hautakartta.fi muodossa “Etunimi Sukunimi”, ja suomenkiha.fi:ssä
-sukunimi ja etunimet kirjoitetaan omiin kenttiinsä. Näin toimivat
-hautahaku.fi, hautakartta.fi, haudat.fi ja suomenkiha.fi.</p>
+muotoseikat: hautahaku.fi ja opasteapp.fi haluavat nimen muodossa
+“Sukunimi Etunimi”, hautakartta.fi muodossa “Etunimi Sukunimi”, ja
+suomenkiha.fi:ssä sukunimi ja etunimet kirjoitetaan omiin kenttiinsä.
+Näin toimivat hautahaku.fi, hautakartta.fi, haudat.fi, opasteapp.fi ja
+suomenkiha.fi.</p>
 <p><strong>Avaa palvelu</strong> – näkyy, kun sukunimeä ei ole annettu.
 Painike avaa palvelun ilman hakuehtoja.</p>
 <p>Painikkeen alla oleva pieni merkintä (“täytetty” tai “liitä”) toistaa
@@ -331,6 +358,11 @@ mutta hakusanaksi kannattaa suomenkiha.fi:ssä valita vanha nimi.</p>
 etunimistä tai lempinimi, ja rekistereissä nimet voivat olla eri
 järjestyksessä. Pelkkä sukunimi ja kuolinvuosi on usein toimivampi
 yhdistelmä.</p>
+<p>Ruotsiin haudatut sukulaiset. Haudat.fi:n ruotsinkielinen versio
+gravar.se sisältää saman suomalaisen aineiston lisäksi noin kolme
+miljoonaa Ruotsin hautausmaille haudattua. Jos suvussa on Ruotsiin
+muuttaneita, avaa haudat.fi:n painikkeesta palvelu ja vaihda
+maa-valinnaksi Ruotsi, tai käytä suoraan gravar.se-osoitetta.</p>
 <p>Muista, mitä rekisteripalvelut eivät näytä. Hautahaku.fi ja
 hautakartta.fi eivät näytä hautoja, joiden hallinta-aika on päättynyt,
 alle kuukausi sitten haudattuja eivätkä yleensä ennen 1900-lukua
@@ -395,6 +427,23 @@ Tämä vaikuttaa vain avoinna olevaan selainikkunaan: kun avustaja avataan
 seuraavan kerran, käytössä on taas siihen upotettu luettelo, joten
 pysyvään käyttöön avustaja kannattaa rakentaa uudelleen edellä kuvatulla
 tavalla.</p>
+<h2 id="miksi-avustaja-ei-hae-tietoja-itse">Miksi avustaja ei hae
+tietoja itse</h2>
+<p>Monet hautatietopalvelut ovat estäneet ja käyttöehdoissaan kieltäneet
+ohjelmalliset tavat kerätä tietoja hakupalveluistaan: robotit,
+automaattiset haut ja tulosten kopioimisen toiseen ohjelmaan. Osa
+kieltää myös valmiiksi täytetyt hakulinkit ilman erillistä lupaa.
+Palveluiden ylläpitäjät haluavat näin varmistaa, että aineistoa
+käytetään heidän omilla sivuillaan, omine ehtoineen ja
+lähdemerkintöineen.</p>
+<p>Tästä syystä avustaja ei hae tietoja palveluista eikä käsittele
+hautatietoja ohjelman sisällä. Avustaja ainoastaan kertoo, mistä
+palveluista etsimäsi kunnan hautausmaat löytyvät, ja avaa palvelun sivun
+selaimeesi – valmiiksi täytettynä silloin, kun palvelu sen sallii, ja
+muuten hakusanan leikepöydälle kopioiden. Itse haku tapahtuu aina
+palvelun omalla sivulla, ja tulokset näet siellä samassa muodossa kuin
+kuka tahansa palvelun käyttäjä. Ainoa tieto, jonka avustaja kokoaa itse,
+on luettelo siitä, mitä hautausmaita kussakin palvelussa on.</p>
 <h2 id="tietosuoja-ja-palveluiden-käyttöehdot">Tietosuoja ja palveluiden
 käyttöehdot</h2>
 <p>Avustaja ei lähetä mitään tietoja minnekään eikä tallenna hakujasi.

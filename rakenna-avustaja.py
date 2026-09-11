@@ -44,6 +44,8 @@ slim = {
     'suomenkiha': katt['suomenkiha']['municipalities'],
     'genealogia': katt.get('genealogia', {}).get('municipalities', []),
     'geneanet': katt['geneanet']['regions'],
+    'opasteapp': [{'slug': c['slug'], 'name': c['name'], 'url': c['url']} for c in katt.get('opasteapp', {}).get('instances', [])],
+    'suvusto': [{'kunta': c['kunta'], 'url': c['url'], 'photos': c['photos']} for c in katt.get('suvusto', {}).get('municipalities', [])],
     'mapping': {k: v for k, v in mapping.items() if not k.startswith('_')},
 }
 marker = '/*__DATA__*/null'

@@ -15,11 +15,13 @@ Lähteet:
                    (vain hakemisto: nimi, kunta, tyyppi; ei henkilötietoja)
   genealogia.fi    Hautakivitietokannan hautausmaaluettelo (Google Sheets, CSV-vienti)
   geneanet         Suomi-sivun maakuntakohtaiset lukumäärät
+  opasteapp.fi     seurakuntakohtaiset sivut (Vantaa, Kerava, Vihti); tarkistetaan, että ne vastaavat
+  suvusto.fi       Haudat-osion sivupalkin kuvauspaikkaluettelo (kunnat ja kuvamäärät)
 
 Käyttö (samassa kansiossa kuin kattavuus.json ja kunta-vastaavuudet.json):
   python paivita-kattavuus.py                 # päivittää kattavuus.json
   python paivita-kattavuus.py --dry-run       # näyttää muutokset, ei kirjoita
-  python paivita-kattavuus.py --skip suomenkiha,geneanet
+  python paivita-kattavuus.py --skip suomenkiha,geneanet,opasteapp,suvusto
   python paivita-kattavuus.py --only hautakartta
 
 Vaatii Pythonin 3.8+ ja requests-kirjaston (pip install requests).
@@ -312,6 +314,57 @@ def fetch_geneanet():
     return regions
 
 
+# ---------------------------------------------------------------- opasteapp.fi
+OPASTEAPP_INSTANCES = [
+    {'slug': 'hautausmaa-vantaa', 'name': 'Vantaan seurakuntien hautausmaat', 'kunnat': ['Vantaa']},
+    {'slug': 'hautausmaa-kerava', 'name': 'Keravan hautausmaa', 'kunnat': ['Kerava']},
+    {'slug': 'hautausmaa-vihti', 'name': 'Vihdin hautausmaa', 'kunnat': ['Vihti']},
+]
+
+
+def fetch_opasteapp():
+    """OpasteAppilla ei ole luetteloa instansseistaan; tunnetut instanssit tarkistetaan ja
+    etusivulta poimitaan mahdolliset uudet hautausmaa-*-linkit."""
+    base = 'https://www.opasteapp.fi'
+    html = get(base + '/').text
+    found = {m.group(1) for m in re.finditer(r'href="[^"]*?/(hautausmaa-[a-z0-9-]+)/?"', html)}
+    known = {i['slug'] for i in OPASTEAPP_INSTANCES}
+    out = []
+    for inst in OPASTEAPP_INSTANCES + [{'slug': s, 'name': s, 'kunnat': []} for s in sorted(found - known)]:
+        try:
+            page = get(f"{base}/{inst['slug']}/").text
+            title = re.search(r'<title>(.*?)</title>', page, re.S)
+            h = re.search(r'<h\d[^>]*>([^<]{3,80})</h\d>', page)
+            name = (h.group(1).strip() if h else inst['name'])
+            out.append({'slug': inst['slug'], 'name': name if name and name != 'OpasteApp' else inst['name'],
+                        'url': f"{base}/{inst['slug']}/", 'kunnat': inst['kunnat']})
+        except Exception as e:
+            warn(f"opasteapp {inst['slug']}: {e}")
+    return out
+
+
+# ---------------------------------------------------------------- suvusto.fi
+def fetch_suvusto():
+    """Lukee Suvuston Haudat-osion sivupalkista kuvauspaikat: kunnat ja kuvamäärät.
+    Sivupalkissa kunta on muodossa '+Kemijärvi (5264)' tai avattuna '—Kemijärvi (5264)'."""
+    html = get('https://suvusto.fi/haudat/').text
+    text = re.sub(r'<[^>]+>', ' ', html)
+    text = html_mod.unescape(re.sub(r'\s+', ' ', text))
+    m = re.search(r'KUVAUSPAIKAT(.*?)SUKUNIMET', text, re.I)
+    if not m:
+        raise ValueError('kuvauspaikkaluetteloa ei löytynyt (sivun rakenne muuttunut?)')
+    out = []
+    for name, n in re.findall(r'[+—–-]\s*([A-ZÅÄÖ][\wåäöÅÄÖ .-]+?)\s*\((\d+)\)', m.group(1)):
+        name = name.strip()
+        if 'hautuumaa' in name.lower() or 'hautausmaa' in name.lower():
+            continue  # avattu kunta listaa myös hautausmaansa; ne ohitetaan
+        slug = re.sub(r'[^a-z0-9-]', '', name.lower().replace('ä', 'a').replace('ö', 'o').replace('å', 'a').replace(' ', '-'))
+        out.append({'kunta': name, 'slug': slug, 'url': f'https://suvusto.fi/haudat/{slug}/', 'photos': int(n)})
+    if not out:
+        raise ValueError('kuvauspaikkoja ei löytynyt')
+    return out
+
+
 # ---------------------------------------------------------------- kuntaindeksi
 def build_index(d, mapping):
     idx = {}
@@ -330,6 +383,12 @@ def build_index(d, mapping):
     for c in d['haudat']['parishes']:
         for k in hd_kunnat.get(c['slug'], [c['name']]):
             add(k, 'haudat', c['name'])
+    for c in d.get('suvusto', {}).get('municipalities', []):
+        add(c['kunta'], 'suvusto', f"{c['photos']} hautakivikuvaa")
+    oa_kunnat = mapping.get('opasteapp_kunnat', {})
+    for c in d.get('opasteapp', {}).get('instances', []):
+        for k in oa_kunnat.get(c['slug'], c.get('kunnat', [])):
+            add(k, 'opasteapp', c['name'])
     for s in d['suomenkiha']['municipalities']:
         k = s['city'].split('/')[0].strip()
         parts = []
@@ -375,6 +434,9 @@ DEFAULT_MAPPING = {
         "forssanseurakunta": ["Forssa"], "heinolanseurakunta": ["Heinola"], "janakkalanseurakunta": ["Janakkala"],
         "lapuanseurakunta": ["Lapua"], "merikarvianseurakunta": ["Merikarvia"], "siilinjarvenseurakunta": ["Siilinjärvi"]
     },
+    "opasteapp_kunnat": {
+        "hautausmaa-vantaa": ["Vantaa"], "hautausmaa-kerava": ["Kerava"], "hautausmaa-vihti": ["Vihti"]
+    },
     "haudat_kunnat": {
         "eckero-hammarlands-forsamling": ["Eckerö", "Hammarland"], "suomussalmen-seurakunta": ["Suomussalmi"],
         "muuramen-seurakunta": ["Muurame"], "pyhtaan-seurakunta": ["Pyhtää"], "ranuan-seurakunta": ["Ranua"],
@@ -411,6 +473,8 @@ def names_by_service(d):
     out['haudat'] = {c['name']: {x['name'] for x in c['cemeteries']} for c in d.get('haudat', {}).get('parishes', [])}
     out['suomenkiha'] = {s['city']: {s['graveyards'] + s['warCemeteries'] + s['orthodox']} for s in d.get('suomenkiha', {}).get('municipalities', [])}
     out['hautakivitietokanta'] = {g['kunta']: {g['photographed']} for g in d.get('genealogia', {}).get('municipalities', [])}
+    out['opasteapp'] = {c['name']: set(c.get('kunnat', [])) for c in d.get('opasteapp', {}).get('instances', [])}
+    out['suvusto'] = {c['kunta']: {c['photos']} for c in d.get('suvusto', {}).get('municipalities', [])}
     return out
 
 
@@ -469,6 +533,8 @@ def main():
         'suomenkiha': old.get('suomenkiha', {'url': 'https://suomenkiha.fi/', 'municipalities': []}),
         'genealogia': old.get('genealogia', {'url': 'https://www.genealogia.fi/hautakivitietokanta/', 'municipalities': []}),
         'geneanet': old.get('geneanet', {'url': 'https://fi.geneanet.org/siviilihautausmaa/geo/FIN/suomi', 'regions': {}}),
+        'opasteapp': old.get('opasteapp', {'url': 'https://www.opasteapp.fi/', 'instances': []}),
+        'suvusto': old.get('suvusto', {'url': 'https://suvusto.fi/haudat/', 'municipalities': []}),
     }
     # säilytä vanhat lähdeaikaleimat
     new['sources'] = dict(old.get('sources', {}))
@@ -480,6 +546,8 @@ def main():
         ('suomenkiha', lambda: (lambda m, n: {'url': 'https://suomenkiha.fi/', 'directory_entries': n, 'municipalities': m})(*fetch_suomenkiha())),
         ('genealogia', lambda: {'url': 'https://www.genealogia.fi/hautakivitietokanta/', 'sheet': SHEET, 'municipalities': fetch_genealogia()}),
         ('geneanet', lambda: (lambda r: {'url': 'https://fi.geneanet.org/siviilihautausmaa/geo/FIN/suomi', 'regions': r, 'total_cemeteries': sum(r.values())})(fetch_geneanet())),
+        ('opasteapp', lambda: {'url': 'https://www.opasteapp.fi/', 'instances': fetch_opasteapp()}),
+        ('suvusto', lambda: {'url': 'https://suvusto.fi/haudat/', 'municipalities': fetch_suvusto()}),
     ]
     for name, fn in steps:
         if not active(name):
@@ -488,7 +556,7 @@ def main():
         print(f'{name}: noudetaan ...', flush=True)
         try:
             res = fn()
-            n = len(res.get('congregations') or res.get('parishes') or res.get('municipalities') or res.get('regions') or [])
+            n = len(res.get('congregations') or res.get('parishes') or res.get('municipalities') or res.get('regions') or res.get('instances') or [])
             if n == 0:
                 raise ValueError('nouto palautti tyhjän luettelon')
             new[name] = res
@@ -506,10 +574,12 @@ def main():
                          if g['postoffice'] and g['postoffice'] not in mapping['postitoimipaikka_kunta']})
     unknown_hk = sorted(c['slug'] for c in new['hautakartta']['congregations'] if c['slug'] not in mapping['hautakartta_kunnat'])
     unknown_hd = sorted(c['slug'] for c in new['haudat']['parishes'] if c['slug'] not in mapping['haudat_kunnat'])
+    unknown_oa = sorted(c['slug'] for c in new.get('opasteapp', {}).get('instances', []) if c['slug'] not in mapping.get('opasteapp_kunnat', {}))
     todo = []
     if unknown_po: todo.append('Tarkista kunta näille hautahaku.fi:n postitoimipaikoille (kunta-vastaavuudet.json): ' + ', '.join(unknown_po))
     if unknown_hk: todo.append('Lisää kunnat näille hautakartta.fi-seurakunnille: ' + ', '.join(unknown_hk))
     if unknown_hd: todo.append('Lisää kunnat näille haudat.fi-seurakunnille: ' + ', '.join(unknown_hd))
+    if unknown_oa: todo.append('Lisää kunnat näille opasteapp.fi-seurakunnille (opasteapp_kunnat): ' + ', '.join(unknown_oa))
 
     print('\nMuutokset edelliseen versioon:')
     for l in changes or ['(ei muutoksia)']:

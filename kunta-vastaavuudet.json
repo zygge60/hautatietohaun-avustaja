@@ -1,5 +1,5 @@
 {
- "_ohje": "Käsin ylläpidettävä vastaavuustaulukko. postitoimipaikka_kunta: hautahaku.fi:n postitoimipaikka -> nykyinen kunta. hautakartta_kunnat / haudat_kunnat: seurakunnan tunnus -> kunnat, joita se kattaa. entinen_kunta: lakkautettu kunta -> nykyinen kunta (kuntaindeksin ristiviittaus). Lisää rivejä, kun päivitysraportti ilmoittaa uusista seurakunnista tai postitoimipaikoista.",
+ "_ohje": "Käsin ylläpidettävä vastaavuustaulukko. postitoimipaikka_kunta: hautahaku.fi:n postitoimipaikka -> nykyinen kunta. hautakartta_kunnat / haudat_kunnat / opasteapp_kunnat: seurakunnan tunnus -> kunnat, joita se kattaa. entinen_kunta: lakkautettu kunta -> nykyinen kunta (kuntaindeksin ristiviittaus). Lisää rivejä, kun päivitysraportti ilmoittaa uusista seurakunnista tai postitoimipaikoista.",
  "postitoimipaikka_kunta": {
   "Hiltulanlahti": "Kuopio",
   "Hirvilahti": "Kuopio",
@@ -254,5 +254,16 @@
   "Säynätsalo": "Jyväskylä",
   "Jokela": "Tuusula",
   "Kellokoski": "Tuusula"
+ },
+ "opasteapp_kunnat": {
+  "hautausmaa-vantaa": [
+   "Vantaa"
+  ],
+  "hautausmaa-kerava": [
+   "Kerava"
+  ],
+  "hautausmaa-vihti": [
+   "Vihti"
+  ]
  }
 }

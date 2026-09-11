@@ -25,6 +25,16 @@
   "geneanet": {
    "fetched": "2026-09-11T11:40",
    "ok": true
+  },
+  "opasteapp": {
+   "fetched": "2026-09-11T12:30",
+   "ok": true,
+   "note": "instanssit tarkistettu selaimessa"
+  },
+  "suvusto": {
+   "fetched": "2026-09-11T13:10",
+   "ok": true,
+   "note": "poimittu selaimessa"
   }
  },
  "hautahaku": {
@@ -19203,6 +19213,9 @@
    ],
    "hautakivitietokanta": [
     "1/7 hautausmaata kuvattu"
+   ],
+   "suvusto": [
+    "5264 hautakivikuvaa"
    ]
   },
   "Keminmaa": {
@@ -19238,6 +19251,9 @@
    ],
    "hautakivitietokanta": [
     "0/2 hautausmaata kuvattu"
+   ],
+   "opasteapp": [
+    "Keravan hautausmaa"
    ]
   },
   "Kerimäki": {
@@ -20468,6 +20484,9 @@
    ],
    "hautakivitietokanta": [
     "0/3 hautausmaata kuvattu"
+   ],
+   "suvusto": [
+    "1164 hautakivikuvaa"
    ]
   },
   "Pello": {
@@ -20944,6 +20963,9 @@
    ],
    "hautakivitietokanta": [
     "16/17 hautausmaata kuvattu"
+   ],
+   "suvusto": [
+    "13545 hautakivikuvaa"
    ]
   },
   "Ruokolahti": {
@@ -21012,6 +21034,9 @@
    ],
    "hautakivitietokanta": [
     "0/5 hautausmaata kuvattu"
+   ],
+   "suvusto": [
+    "2682 hautakivikuvaa"
    ]
   },
   "Salo": {
@@ -21088,6 +21113,9 @@
   "Savukoski": {
    "suomenkiha": [
     "1 sankarihautausmaa(ta)"
+   ],
+   "suvusto": [
+    "968 hautakivikuvaa"
    ]
   },
   "Seinäjoki": {
@@ -21194,6 +21222,9 @@
    ],
    "hautakivitietokanta": [
     "4/4 hautausmaata kuvattu"
+   ],
+   "suvusto": [
+    "4007 hautakivikuvaa"
    ]
   },
   "Soini": {
@@ -21744,6 +21775,9 @@
    ],
    "hautakivitietokanta": [
     "4/6 hautausmaata kuvattu"
+   ],
+   "opasteapp": [
+    "Vantaan seurakuntien hautausmaat"
    ]
   },
   "Varkaus": {
@@ -21835,6 +21869,9 @@
    ],
    "hautakivitietokanta": [
     "0/2 hautausmaata kuvattu"
+   ],
+   "opasteapp": [
+    "Vihdin hautausmaa"
    ]
   },
   "Viiala": {
@@ -22039,5 +22076,75 @@
     "1 sankarihautausmaa(ta)"
    ]
   }
+ },
+ "opasteapp": {
+  "url": "https://www.opasteapp.fi/",
+  "instances": [
+   {
+    "slug": "hautausmaa-vantaa",
+    "name": "Vantaan seurakuntien hautausmaat",
+    "url": "https://www.opasteapp.fi/hautausmaa-vantaa/",
+    "kunnat": [
+     "Vantaa"
+    ]
+   },
+   {
+    "slug": "hautausmaa-kerava",
+    "name": "Keravan hautausmaa",
+    "url": "https://www.opasteapp.fi/hautausmaa-kerava/",
+    "kunnat": [
+     "Kerava"
+    ]
+   },
+   {
+    "slug": "hautausmaa-vihti",
+    "name": "Vihdin hautausmaa",
+    "url": "https://www.opasteapp.fi/hautausmaa-vihti/",
+    "kunnat": [
+     "Vihti"
+    ]
+   }
+  ]
+ },
+ "suvusto": {
+  "url": "https://suvusto.fi/haudat/",
+  "municipalities": [
+   {
+    "kunta": "Kemijärvi",
+    "slug": "kemijarvi",
+    "url": "https://suvusto.fi/haudat/kemijarvi/",
+    "photos": 5264
+   },
+   {
+    "kunta": "Pelkosenniemi",
+    "slug": "pelkosenniemi",
+    "url": "https://suvusto.fi/haudat/pelkosenniemi/",
+    "photos": 1164
+   },
+   {
+    "kunta": "Rovaniemi",
+    "slug": "rovaniemi",
+    "url": "https://suvusto.fi/haudat/rovaniemi/",
+    "photos": 13545
+   },
+   {
+    "kunta": "Salla",
+    "slug": "salla",
+    "url": "https://suvusto.fi/haudat/salla/",
+    "photos": 2682
+   },
+   {
+    "kunta": "Savukoski",
+    "slug": "savukoski",
+    "url": "https://suvusto.fi/haudat/savukoski/",
+    "photos": 968
+   },
+   {
+    "kunta": "Sodankylä",
+    "slug": "sodankyla",
+    "url": "https://suvusto.fi/haudat/sodankyla/",
+    "photos": 4007
+   }
+  ]
  }
 }

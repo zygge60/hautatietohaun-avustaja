@@ -66,7 +66,7 @@ a{color:var(--acc)}
 details summary{cursor:pointer;color:var(--acc);font-size:14px}
 .toast{position:fixed;bottom:16px;left:50%;transform:translateX(-50%);background:#333;color:#fff;padding:8px 14px;border-radius:6px;font-size:14px;opacity:0;transition:opacity .3s;pointer-events:none}
 .toast.show{opacity:1}
-footer{font-size:12px;color:var(--muted);padding:10px 0 30px;text-align:center}
+footer{font-size:12px;color:var(--muted);padding:10px 0 30px;text-align:center;line-height:1.7}
 footer a{color:var(--acc);text-decoration:none}
 footer a:hover{text-decoration:underline}
 </style>
@@ -122,13 +122,17 @@ footer a:hover{text-decoration:underline}
   </details>
 </div>
 
-<footer>Hautatietohaun avustaja v0.5 · <a href="kayttoohje.html" target="_blank" rel="noopener">Käyttöohje</a> · linkit ja kattavuus:
+<footer>Hautatietohaun avustaja v0.8 · <a href="kayttoohje.html" target="_blank" rel="noopener">Käyttöohje</a> · linkit ja kattavuus:
 <a href="https://www.hautahaku.fi/fi" target="_blank" rel="noopener">hautahaku.fi</a>,
 <a href="https://hautakartta.fi/" target="_blank" rel="noopener">hautakartta.fi</a>,
-<a href="https://haudat.fi/" target="_blank" rel="noopener">haudat.fi</a>,
+<a href="https://haudat.fi/" target="_blank" rel="noopener">haudat.fi</a> (ruotsiksi <a href="https://gravar.se/" target="_blank" rel="noopener">gravar.se</a>),
+<a href="https://www.opasteapp.fi/" target="_blank" rel="noopener">opasteapp.fi</a>,
 <a href="https://suomenkiha.fi/" target="_blank" rel="noopener">suomenkiha.fi</a>,
 <a href="https://www.genealogia.fi/hautakivitietokanta/" target="_blank" rel="noopener">Suomen Sukututkimusseuran Hautakivitietokanta</a>,
-<a href="https://fi.geneanet.org/siviilihautausmaa/" target="_blank" rel="noopener">Geneanet</a></footer>
+<a href="https://suvusto.fi/haudat/" target="_blank" rel="noopener">suvusto.fi</a>,
+<a href="https://fi.geneanet.org/siviilihautausmaa/" target="_blank" rel="noopener">Geneanet</a>,
+<a href="https://www.findagrave.com/" target="_blank" rel="noopener">Find a Grave</a><br>
+Myös <a href="https://billiongraves.com/search" target="_blank" rel="noopener">BillionGraves</a>-palvelua voi käyttää hautahakuun, mutta avustajan rakenteen vuoksi se ei ole mukana.</footer>
 </main>
 <div class="toast" id="toast"></div>
 
@@ -148,11 +152,11 @@ function norm(s){return (s||'').toLowerCase().replace(/\s+/g,' ').trim()}
 function baseName(city){return city.split('/')[0].trim()}
 
 /* ---------- kuntaindeksi upotetusta datasta ---------- */
-var IDX = {};   // kunta -> {hautahaku:[{cong,id,cemeteries:[{id,name}]}], hautakartta:[{slug,name}], haudat:[{slug,name}], suomenkiha:[...], genealogia:[...]}
+var IDX = {};   // kunta -> {hautahaku:[...], hautakartta:[...], haudat:[...], opasteapp:[...], suomenkiha:[...], genealogia:[...]}
 var ALIAS = {}; // hakunimi (pienillä) -> kunta
 function buildIndex(){
   IDX={};ALIAS={};
-  function ent(k){k=k.trim();if(!IDX[k])IDX[k]={hautahaku:[],hautakartta:[],haudat:[],suomenkiha:[],genealogia:[]};ALIAS[norm(k)]=k;return IDX[k]}
+  function ent(k){k=k.trim();if(!IDX[k])IDX[k]={hautahaku:[],hautakartta:[],haudat:[],opasteapp:[],suomenkiha:[],genealogia:[],suvusto:[]};ALIAS[norm(k)]=k;return IDX[k]}
   var m=DATA.mapping||{};
   DATA.hautahaku.forEach(function(c){
     var byK={};
@@ -167,6 +171,10 @@ function buildIndex(){
     var ks=(m.haudat_kunnat||{})[c.slug]||[c.name];
     ks.forEach(function(k){ent(k).haudat.push(c)});
   });
+  (DATA.opasteapp||[]).forEach(function(c){
+    var ks=(m.opasteapp_kunnat||{})[c.slug]||[];
+    ks.forEach(function(k){ent(k).opasteapp.push(c)});
+  });
   DATA.suomenkiha.forEach(function(s){
     if(s.city==='Testi')return;
     var k=baseName(s.city);ent(k).suomenkiha.push(s);
@@ -174,6 +182,7 @@ function buildIndex(){
     s.city.split('/').forEach(function(p){ALIAS[norm(p)]=k});
   });
   (DATA.genealogia||[]).forEach(function(g){ent(g.kunta).genealogia.push(g)});
+  (DATA.suvusto||[]).forEach(function(c){ent(c.kunta).suvusto.push(c)});
   Object.keys(m.entinen_kunta||{}).forEach(function(old){
     var cur=m.entinen_kunta[old];
     if(IDX[cur]){ if(!IDX[old]) ent(old); IDX[old].nykyinen=cur; }
@@ -196,8 +205,8 @@ function suggest(q){
   if(!hits.length){box.hidden=true;return}
   box.innerHTML='<div class="hd">Valitse kunta klikkaamalla tai nuolinäppäimillä ja Enterillä</div>'+hits.map(function(k){
     var e=IDX[k],tags=[];
-    if(e.hautahaku.length)tags.push('hautahaku.fi');if(e.hautakartta.length)tags.push('hautakartta.fi');if(e.haudat.length)tags.push('haudat.fi');
-    if(e.suomenkiha.length||e.genealogia.some(function(g){return g.photographed>0}))tags.push('kuvia');if(e.nykyinen)tags.push('→ '+e.nykyinen);
+    if(e.hautahaku.length)tags.push('hautahaku.fi');if(e.hautakartta.length)tags.push('hautakartta.fi');if(e.haudat.length)tags.push('haudat.fi');if(e.opasteapp.length)tags.push('opasteapp.fi');
+    if(e.suomenkiha.length||e.suvusto.length||e.genealogia.some(function(g){return g.photographed>0}))tags.push('kuvia');if(e.nykyinen)tags.push('→ '+e.nykyinen);
     return '<div data-k="'+esc(k)+'">'+esc(k)+' <small>'+esc(tags.join(' · '))+'</small></div>'
   }).join('');
   box.hidden=false;
@@ -227,8 +236,8 @@ document.addEventListener('click',function(e){if(!e.target.closest('.rel'))$('su
 
 /* ---------- kattavuuskortti ---------- */
 function coverageFor(kunnat){
-  var c={hautahaku:[],hautakartta:[],haudat:[],suomenkiha:[],genealogia:[]};
-  kunnat.forEach(function(k){var e=IDX[k];if(!e)return;['hautahaku','hautakartta','haudat','suomenkiha','genealogia'].forEach(function(s){e[s].forEach(function(x){if(c[s].indexOf(x)<0)c[s].push(x)})})});
+  var c={hautahaku:[],hautakartta:[],haudat:[],opasteapp:[],suomenkiha:[],genealogia:[],suvusto:[]};
+  kunnat.forEach(function(k){var e=IDX[k];if(!e)return;['hautahaku','hautakartta','haudat','opasteapp','suomenkiha','genealogia','suvusto'].forEach(function(s){e[s].forEach(function(x){if(c[s].indexOf(x)<0)c[s].push(x)})})});
   return c;
 }
 function renderCoverage(){
@@ -239,11 +248,14 @@ function renderCoverage(){
   var k1=chosen[0]||'';
   box(c.hautahaku.length,'hautahaku.fi – virallinen hautarekisteri',c.hautahaku.length?c.hautahaku.map(function(x){return '<b>'+esc(x.cong)+'</b><ul>'+x.cemeteries.map(function(g){return '<li>'+esc(g.name)+'</li>'}).join('')+'</ul>'}).join(''):'Ei valittujen kuntien hautausmaita.','https://www.hautahaku.fi/fi');
   box(c.hautakartta.length,'hautakartta.fi – virallinen hautarekisteri, kartta',c.hautakartta.length?c.hautakartta.map(function(x){return '<b>'+esc(x.name)+'</b><ul>'+x.cemeteries.map(function(g){return '<li>'+esc(g)+'</li>'}).join('')+'</ul>'}).join(''):'Ei valittujen kuntien hautausmaita.',c.hautakartta.length===1?'https://hautakartta.fi/'+c.hautakartta[0].slug+'/':'https://hautakartta.fi/');
-  box(c.haudat.length,'haudat.fi – virallinen hautarekisteri (Vitec)',c.haudat.length?c.haudat.map(function(x){return '<b>'+esc(x.name)+'</b> ('+x.deceased+' vainajaa)<ul>'+x.cemeteries.map(function(g){return '<li>'+esc(g)+'</li>'}).join('')+'</ul>'}).join(''):'Ei valittujen kuntien hautausmaita.',c.haudat.length===1?'https://haudat.fi/forsamling/'+c.haudat[0].slug:'https://haudat.fi/');
+  box(c.haudat.length,'haudat.fi – virallinen hautarekisteri (Vitec)',(c.haudat.length?c.haudat.map(function(x){return '<b>'+esc(x.name)+'</b> ('+x.deceased+' vainajaa)<ul>'+x.cemeteries.map(function(g){return '<li>'+esc(g)+'</li>'}).join('')+'</ul>'}).join(''):'Ei valittujen kuntien hautausmaita.')+'<div class="note" style="margin-top:6px">Sama palvelu ruotsiksi: <a href="https://gravar.se/" target="_blank" rel="noopener">gravar.se</a> (kattaa myös Ruotsin hautausmaat).</div>',c.haudat.length===1?'https://haudat.fi/forsamling/'+c.haudat[0].slug:'https://haudat.fi/');
+  box(c.opasteapp.length,'opasteapp.fi – virallinen hautarekisteri (Vantaa, Kerava, Vihti)',c.opasteapp.length?c.opasteapp.map(function(x){return '<b>'+esc(x.name)+'</b>'}).join('<br>'):'Ei valittujen kuntien hautausmaita.',c.opasteapp.length===1?c.opasteapp[0].url:'https://www.opasteapp.fi/');
   box(c.suomenkiha.length,'suomenkiha.fi – hautakivikuvat',c.suomenkiha.length?c.suomenkiha.map(function(s){var p=[];if(s.graveyards)p.push(s.graveyards+' hautausmaata');if(s.warCemeteries)p.push(s.warCemeteries+' sankarihautausmaata');if(s.orthodox)p.push(s.orthodox+' ortodoksista');return '<b>'+esc(s.city)+'</b>: '+p.join(', ')+(s.names&&s.names.length?'<ul>'+s.names.map(function(n){return '<li>'+esc(n)+'</li>'}).join('')+'</ul>':'')}).join('<br>'):'Ei hakemistossa tällä kuntanimellä (kokeile entistä kuntaa tai ruotsinkielistä nimeä).','https://suomenkiha.fi/');
   var gnPhoto=c.genealogia.reduce(function(n,g){return n+(g.photographed||0)},0);
   box(c.genealogia.length?gnPhoto>0:true,'Hautakivitietokanta (Sukututkimusseura)',c.genealogia.length?c.genealogia.map(function(g){return '<b>'+esc(g.kunta)+'</b>: '+(g.photographed?g.photographed+'/'+g.cemeteries+' hautausmaata kuvattu':'ei vielä kuvattuja hautausmaita ('+g.cemeteries+' hautausmaata Seuran luettelossa)')+(g.cemetery_list?'<ul>'+g.cemetery_list.map(function(x){return '<li>'+esc(x.name)+(x.kuvattu?' ✓ kuvattu':' – ei kuvattu')+(x.prosentti&&x.prosentti!=='0'&&x.prosentti!=='100'?' ('+esc(x.prosentti)+' %)':'')+'</li>'}).join('')+'</ul>':'')}).join('<br>'):'Ei tietoa kunnan tilanteesta Seuran hautausmaaluettelossa.',hautakiviUrl({suku:'',etu:'',synt:'',kuol:''},k1));
+  box(c.suvusto.length,'suvusto.fi – hautakivikuvat (Koillis-Lappi)',c.suvusto.length?c.suvusto.map(function(x){return '<b>'+esc(x.kunta)+'</b>: '+x.photos+' hautakivikuvaa'}).join('<br>'):'Ei valittujen kuntien kuvia. Aineisto: '+(DATA.suvusto||[]).map(function(x){return esc(x.kunta)}).join(', ')+'.',c.suvusto.length===1?c.suvusto[0].url:'https://suvusto.fi/haudat/');
   box(true,'Geneanet – hautausmaat','Suomesta 179 hautausmaata. Maakunnittain: '+Object.keys(DATA.geneanet||{}).map(function(r){return esc(r)+' '+DATA.geneanet[r]}).join(', ')+'.','https://fi.geneanet.org/siviilihautausmaa/geo/FIN/suomi');
+  box(true,'Find a Grave – hautamuistomerkit','Käyttäjien ylläpitämä kansainvälinen tietokanta; Suomesta 1 236 hautausmaata, kattavuus vaihtelee suuresti (esim. Hietaniemi yli 150 000 muistomerkkiä, monet pienet hautausmaat lähes tyhjiä). Kattaa myös ulkomaille haudatut.','https://www.findagrave.com/cemetery-browse/Finland?id=country_29');
   $('cov').innerHTML=h;card.hidden=false;
 }
 
@@ -276,7 +288,15 @@ function buildLinks(f){
   /* haudat.fi */
   var hdCov=chosen.length?c.haudat.length>0:null;
   {
-    links.push({svc:'haudat.fi',data:'Virallinen hautarekisteri (Vitec Katrina), 11 seurakuntaa Suomessa',cov:hdCov,url:c.haudat.length===1?'https://haudat.fi/forsamling/'+c.haudat[0].slug:'https://haudat.fi/',mode:f.suku?'clip':'open',clip:f.suku,hint:(f.suku?'Liitä':'Kirjoita')+' sukunimi hakukenttään'+(c.haudat.length?'; seurakunta: '+c.haudat.map(function(x){return x.name}).join(', '):'')+''});
+    links.push({svc:'haudat.fi',data:'Virallinen hautarekisteri (Vitec Katrina), 11 seurakuntaa Suomessa. Ruotsinkielinen versio gravar.se kattaa myös Ruotsin hautausmaat',cov:hdCov,url:c.haudat.length===1?'https://haudat.fi/forsamling/'+c.haudat[0].slug:'https://haudat.fi/',mode:f.suku?'clip':'open',clip:f.suku,hint:(f.suku?'Liitä':'Kirjoita')+' sukunimi hakukenttään'+(c.haudat.length?'; seurakunta: '+c.haudat.map(function(x){return x.name}).join(', '):'')+''});
+  }
+
+  /* opasteapp.fi */
+  var oaCov=chosen.length?c.opasteapp.length>0:null;
+  if(c.opasteapp.length){
+    c.opasteapp.forEach(function(x){links.push({svc:'opasteapp.fi',data:'Virallinen hautarekisteri ja aluekartta – '+x.name,cov:true,url:x.url,mode:fullHH?'clip':'open',clip:fullHH,hint:(fullHH?'Liitä nimi hakukenttään (muoto "Sukunimi Etunimi")':'Kirjoita nimi hakukenttään')+'; tulokset päivittyvät kirjoitettaessa'})});
+  } else {
+    links.push({svc:'opasteapp.fi',data:'Virallinen hautarekisteri ja aluekartta: Vantaan seurakunnat, Kerava, Vihti',cov:oaCov,url:'https://www.opasteapp.fi/',mode:fullHH?'clip':'open',clip:fullHH,hint:'Valitse seurakunta ja '+(fullHH?'liitä':'kirjoita')+' nimi (muoto "Sukunimi Etunimi")'});
   }
 
   /* suomenkiha.fi */
@@ -288,11 +308,28 @@ function buildLinks(f){
   links.push({svc:'Hautakivitietokanta (genealogia.fi)',data:'Hautakivikuvat, yli miljoona hautatietoa, koko Suomi + siirtolaishautoja',cov:chosen.length?(c.genealogia.length?c.genealogia.some(function(g){return g.photographed>0}):null):null,url:hautakiviUrl(f,chosen.length?chosen[0]:''),mode:'dir',
     hint:'Linkki avaa Hautakivitietokannan hakusivun hakuehdot valmiiksi täytettyinä'+(chosen.length?', paikkakunta "'+chosen[0]+'"':'')});
 
+  /* suvusto.fi */
+  var svCov=chosen.length?c.suvusto.length>0:null;
+  if(f.suku){
+    var svSlug=f.suku.toLowerCase().replace(/ä/g,'a').replace(/ö/g,'o').replace(/å/g,'a').replace(/\s+/g,'-').replace(/[^a-z0-9-]/g,'');
+    links.push({svc:'suvusto.fi',data:'Hautakivikuvat sukunimittäin: Rovaniemi, Kemijärvi, Sodankylä, Salla, Pelkosenniemi, Savukoski',cov:svCov,url:'https://suvusto.fi/haudat/'+svSlug+'/',mode:'dir',hint:'Linkki avaa sukunimen kaikki hautakivikuvat hautausmaittain; jos sukunimeä ei ole aineistossa, sivu ilmoittaa "Sivua ei löydy"'});
+  } else {
+    links.push({svc:'suvusto.fi',data:'Hautakivikuvat sukunimittäin: Rovaniemi, Kemijärvi, Sodankylä, Salla, Pelkosenniemi, Savukoski',cov:svCov,url:c.suvusto.length===1?c.suvusto[0].url:'https://suvusto.fi/haudat/',mode:'open',hint:'Selaa kuvia kunnittain ja sukunimittäin'});
+  }
+
   /* Geneanet */
   var gn={'categories_1__cimetieres__':'cimetieres','categories_2__cimetieres#cimetiere__':'cimetieres#cimetiere','country__0__':'FIN','zonegeo__0__':'Suomi','go':1,'nom':f.suku,'prenom':f.etu,'size':50};
   if(f.synt||f.kuol){gn.type_periode='between';gn.from=f.synt||'';gn.to=f.kuol||''}
   if(f.suku)links.push({svc:'Geneanet – hautausmaat',data:'Hautakivikuvat, Suomesta 179 hautausmaata, lisäksi ulkomaat',cov:null,url:'https://fi.geneanet.org/fonds/individus/?'+q(gn),mode:'dir',hint:'Linkki avaa Geneanetin hakusivun hakuehdot valmiiksi täytettyinä (koko Suomi)'});
   else links.push({svc:'Geneanet – hautausmaat',data:'Hautakivikuvat, Suomesta 179 hautausmaata, lisäksi ulkomaat',cov:null,url:'https://fi.geneanet.org/siviilihautausmaa/geo/FIN/suomi',mode:'open',hint:'Suomen hautausmaat maakunnittain'});
+
+  /* Find a Grave */
+  if(f.suku||f.etu){
+    var fg={firstname:f.etu,middlename:'',lastname:f.suku,birthyear:f.synt,birthyearfilter:f.synt?'exact':'',deathyear:f.kuol,deathyearfilter:f.kuol?'exact':'',location:'Finland',locationId:'country_29',orderby:'r',page:1};
+    links.push({svc:'Find a Grave',data:'Kansainvälinen hautamuistomerkkitietokanta (Ancestry); Suomesta 1 236 hautausmaata, kattavuus vaihtelee',cov:null,url:'https://www.findagrave.com/memorial/search?'+q(fg),mode:'dir',hint:'Linkki avaa Find a Graven hakusivun hakuehdot valmiiksi täytettyinä, rajattuna Suomeen. Poista Finland-rajaus palvelun sivulla, jos etsit ulkomaille haudattuja'});
+  } else {
+    links.push({svc:'Find a Grave',data:'Kansainvälinen hautamuistomerkkitietokanta (Ancestry); Suomesta 1 236 hautausmaata, kattavuus vaihtelee',cov:null,url:'https://www.findagrave.com/cemetery-browse/Finland?id=country_29',mode:'open',hint:'Suomen hautausmaat maakunnittain ja kunnittain'});
+  }
 
   /* järjestys: katetut ensin, sitten tuntemattomat, sitten ei-katetut */
   var order={true:0,null:1,false:2};
@@ -338,7 +375,7 @@ function loadKattavuus(j){
       hautahaku:(j.hautahaku.congregations||[]).map(function(c){return {id:c.id,name:c.name,cemeteries:c.cemeteries.map(function(g){return {name:g.name,kunta:g.kunta}})}}),
       hautakartta:(j.hautakartta.congregations||[]).map(function(c){return {slug:c.slug,name:c.name,cemeteries:c.cemeteries}}),
       haudat:(j.haudat.parishes||[]).map(function(c){return {slug:c.slug,name:c.name,deceased:c.deceased,cemeteries:c.cemeteries.map(function(x){return x.name})}}),
-      suomenkiha:j.suomenkiha.municipalities||[],genealogia:(j.genealogia||{}).municipalities||[],geneanet:(j.geneanet||{}).regions||{},mapping:m};
+      opasteapp:((j.opasteapp||{}).instances||[]).map(function(c){return {slug:c.slug,name:c.name,url:c.url}}),suvusto:((j.suvusto||{}).municipalities||[]).map(function(c){return {kunta:c.kunta,url:c.url,photos:c.photos}}),suomenkiha:j.suomenkiha.municipalities||[],genealogia:(j.genealogia||{}).municipalities||[],geneanet:(j.geneanet||{}).regions||{},mapping:m};
     buildIndex();renderCoverage();$('dataInfo').textContent='kattavuus.json, päivitetty '+DATA.generated;toast('Kattavuustiedot päivitetty ('+DATA.generated+')');
   }catch(e){toast('Tiedoston lukeminen epäonnistui: '+e.message)}
 }

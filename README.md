@@ -1,6 +1,6 @@
 # Hautatietohaun avustaja
 
-Sukututkijan apuväline, joka kokoaa yhteen kuusi suomalaisia hautatietoja tarjoavaa verkkopalvelua. Avustaja kertoo, mistä palveluista etsityn kunnan hautausmaat löytyvät, ja avaa kunkin palvelun oikeaan kohtaan – valmiiksi täytettynä, jos palvelu sen sallii.
+Sukututkijan apuväline, joka kokoaa yhteen yhdeksän suomalaisia hautatietoja tarjoavaa verkkopalvelua. Avustaja kertoo, mistä palveluista etsityn kunnan hautausmaat löytyvät, ja avaa kunkin palvelun oikeaan kohtaan – valmiiksi täytettynä, jos palvelu sen sallii.
 
 Avustaja on **yksi HTML-tiedosto**, joka toimii selaimessa. Se ei hae, tallenna eikä välitä hautatietoja itse: kaikki haut tehdään palveluiden omilla sivuilla.
 
@@ -10,10 +10,13 @@ Avustaja on **yksi HTML-tiedosto**, joka toimii selaimessa. Se ei hae, tallenna 
 |---|---|---|
 | [hautahaku.fi](https://www.hautahaku.fi/fi) | Virallinen hautarekisteri, 15 seurakuntataloutta (mm. Helsinki, Espoo, Tampere, Vaasa, Pori, Kuopio) | Seurakunnat |
 | [hautakartta.fi](https://hautakartta.fi/) | Virallinen hautarekisteri ja kartta, 25 seurakuntaa (mm. Turku, Oulu, Lahti, Jyväskylä, Joensuu, Mikkeli) | Geometrix Oy seurakuntien toimeksiannosta |
-| [haudat.fi](https://haudat.fi/) | Virallinen hautarekisteri, 11 pienempää seurakuntaa | Vitec Software |
+| [haudat.fi](https://haudat.fi/) | Virallinen hautarekisteri, 11 pienempää seurakuntaa; ruotsinkielinen versio [gravar.se](https://gravar.se/) kattaa myös Ruotsin | Vitec Software |
+| [opasteapp.fi](https://www.opasteapp.fi/) | Virallinen hautarekisteri ja aluekartta: Vantaan seurakunnat, Kerava, Vihti | Haarnio seurakuntien toimeksiannosta |
 | [suomenkiha.fi](https://suomenkiha.fi/) | Hautakivikuvat ja indeksoidut nimet, lähes koko Suomi | Suomen kirkkoja ja hautausmaita -yhteisö |
 | [Hautakivitietokanta](https://www.genealogia.fi/hautakivitietokanta/) | Hautakivikuvat ja indeksoidut nimet, koko Suomi | Suomen Sukututkimusseura |
+| [suvusto.fi](https://suvusto.fi/haudat/) | Hautakivikuvat sukunimittäin: Rovaniemi, Kemijärvi, Sodankylä, Salla, Pelkosenniemi, Savukoski (n. 27 600 kuvaa) | Yksityinen sukututkimussivusto |
 | [Geneanet](https://fi.geneanet.org/siviilihautausmaa/) | Yhteisöllinen hautakivikokoelma, Suomesta 179 hautausmaata | Geneanet |
+| [Find a Grave](https://www.findagrave.com/) | Käyttäjien ylläpitämä kansainvälinen hautamuistomerkkitietokanta, Suomesta 1 236 hautausmaata (kattavuus vaihtelee) | Ancestry |
 
 ## Käyttö
 
@@ -54,7 +57,7 @@ python paivita-kattavuus.py             # päivittää kattavuus.json ja muutosl
 python rakenna-avustaja.py              # kokoaa uuden index.html-tiedoston
 ```
 
-Skripti lukee kunkin palvelun oman hautausmaaluettelon (hautakartta.fi:n seurakuntarajapinta, hautahaku.fi:n sovelluspaketin taulukko, haudat.fi:n seurakuntasivut, suomenkiha.fi:n hakemisto, Hautakivitietokannan hautausmaaluettelo ja Geneanetin maakuntasivu), vertaa sitä edelliseen versioon ja tulostaa muutokset. Jos jokin lähde ei toimi, sen edelliset tiedot säilyvät ja skripti varoittaa. Kun luetteloon ilmestyy uusi seurakunta tai postitoimipaikka, jolle ei ole kuntavastaavuutta, skripti pyytää lisäämään sen `kunta-vastaavuudet.json`-tiedostoon.
+Skripti lukee kunkin palvelun oman hautausmaaluettelon (hautakartta.fi:n seurakuntarajapinta, hautahaku.fi:n sovelluspaketin taulukko, haudat.fi:n seurakuntasivut, suomenkiha.fi:n hakemisto, Hautakivitietokannan hautausmaaluettelo, Geneanetin maakuntasivu, opasteapp.fi:n seurakuntasivut ja suvusto.fi:n kuvauspaikkaluettelo), vertaa sitä edelliseen versioon ja tulostaa muutokset. Jos jokin lähde ei toimi, sen edelliset tiedot säilyvät ja skripti varoittaa. Kun luetteloon ilmestyy uusi seurakunta tai postitoimipaikka, jolle ei ole kuntavastaavuutta, skripti pyytää lisäämään sen `kunta-vastaavuudet.json`-tiedostoon.
 
 Valitsimilla `--only` ja `--skip` voi rajata päivityksen tiettyihin palveluihin.
 
@@ -62,17 +65,15 @@ Valitsimilla `--only` ja `--skip` voi rajata päivityksen tiettyihin palveluihin
 
 Avustaja rakentaa kullekin palvelulle linkin, jonka käyttäjä avaa itse.
 
-Hautakivitietokanta ja Geneanet tukevat osoiteparametreja, joten linkki avaa hakusivun hakuehdot valmiiksi täytettyinä.
+Hautakivitietokanta, Geneanet ja Find a Grave tukevat osoiteparametreja, joten linkki avaa hakusivun hakuehdot valmiiksi täytettyinä. Suvusto.fi:ssä jokaisella sukunimellä on oma sivunsa, joten linkki avaa suoraan sukunimen kuvat.
 
-Hautahaku.fi, hautakartta.fi ja suomenkiha.fi eivät tue osoiteparametreja. Niissä avustaja avaa palvelun oikeaan kohtaan (esimerkiksi hautakartta.fi:ssä valitun seurakunnan hautakarttaan) ja kopioi hakusanan leikepöydälle palvelun odottamassa muodossa.
+Hautahaku.fi, hautakartta.fi, opasteapp.fi ja suomenkiha.fi eivät tue osoiteparametreja. Niissä avustaja avaa palvelun oikeaan kohtaan (esimerkiksi hautakartta.fi:ssä valitun seurakunnan hautakarttaan) ja kopioi hakusanan leikepöydälle palvelun odottamassa muodossa.
 
 Haudat.fi:n käyttöehdot kieltävät syvälinkityksen ilman lupaa, joten siihen ei tehdä täytettyä linkkiä, vaikka palvelu sen teknisesti sallisi.
 
 Avustaja ei kutsu palveluiden hakurajapintoja. Kattavuustietojen päivitysskripti lukee vain palveluiden hautausmaaluetteloita, ei henkilötietoja, ja tekee sen harvakseltaan tunnistettavalla User-Agent-otsakkeella.
 
 ## Tunnetut rajoitukset
-
-Vantaan, Keravan ja Vihdin seurakuntien OpasteApp-palvelu ei ole vielä mukana (Vihti löytyy haudat.fi:stä).
 
 Kuntaindeksi perustuu palveluiden hautausmaaluetteloihin ja käsin ylläpidettyihin kuntaliitostietoihin. Jos jokin lakkautettu kunta ohjaa väärään nykyiseen kuntaan, korjaus tehdään `kunta-vastaavuudet.json`-tiedostoon.
 
