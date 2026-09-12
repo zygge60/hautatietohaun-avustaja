@@ -46,6 +46,13 @@ slim = {
     'geneanet': katt['geneanet']['regions'],
     'opasteapp': [{'slug': c['slug'], 'name': c['name'], 'url': c['url']} for c in katt.get('opasteapp', {}).get('instances', [])],
     'suvusto': [{'kunta': c['kunta'], 'url': c['url'], 'photos': c['photos']} for c in katt.get('suvusto', {}).get('municipalities', [])],
+    # Ruotsi
+    'haudat_se': [{'slug': c['slug'], 'name': c['name'], 'region': c.get('region_name', ''), 'deceased': c['deceased'],
+                   'postort': c.get('postort'), 'cemeteries': [x['name'] for x in c['cemeteries']]}
+                  for c in katt.get('haudat_se', {}).get('parishes', [])],
+    'geneanet_se': katt.get('geneanet_se', {}).get('regions', {}),
+    'hittagraven': {'kunta': katt.get('hittagraven', {}).get('kunta', 'Stockholm'),
+                    'cemeteries': katt.get('hittagraven', {}).get('cemeteries', [])},
     'mapping': {k: v for k, v in mapping.items() if not k.startswith('_')},
 }
 marker = '/*__DATA__*/null'

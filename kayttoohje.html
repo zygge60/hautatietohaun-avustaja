@@ -1,191 +1,48 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml" lang="fi" xml:lang="fi">
+<html xmlns="http://www.w3.org/1999/xhtml" lang xml:lang>
 <head>
   <meta charset="utf-8" />
   <meta name="generator" content="pandoc" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
   <title>Hautatietohaun avustaja – käyttöohje</title>
   <style>
-    html {
-      color: #1a1a1a;
-      background-color: #fdfdfd;
-    }
-    body {
-      margin: 0 auto;
-      max-width: 36em;
-      padding-left: 50px;
-      padding-right: 50px;
-      padding-top: 50px;
-      padding-bottom: 50px;
-      hyphens: auto;
-      overflow-wrap: break-word;
-      text-rendering: optimizeLegibility;
-      font-kerning: normal;
-    }
-    @media (max-width: 600px) {
-      body {
-        font-size: 0.9em;
-        padding: 12px;
-      }
-      h1 {
-        font-size: 1.8em;
-      }
-    }
-    @media print {
-      html {
-        background-color: white;
-      }
-      body {
-        background-color: transparent;
-        color: black;
-        font-size: 12pt;
-      }
-      p, h2, h3 {
-        orphans: 3;
-        widows: 3;
-      }
-      h2, h3, h4 {
-        page-break-after: avoid;
-      }
-    }
-    p {
-      margin: 1em 0;
-    }
-    a {
-      color: #1a1a1a;
-    }
-    a:visited {
-      color: #1a1a1a;
-    }
-    img {
-      max-width: 100%;
-    }
-    h1, h2, h3, h4, h5, h6 {
-      margin-top: 1.4em;
-    }
-    h5, h6 {
-      font-size: 1em;
-      font-style: italic;
-    }
-    h6 {
-      font-weight: normal;
-    }
-    ol, ul {
-      padding-left: 1.7em;
-      margin-top: 1em;
-    }
-    li > ol, li > ul {
-      margin-top: 0;
-    }
-    blockquote {
-      margin: 1em 0 1em 1.7em;
-      padding-left: 1em;
-      border-left: 2px solid #e6e6e6;
-      color: #606060;
-    }
-    code {
-      font-family: Menlo, Monaco, Consolas, 'Lucida Console', monospace;
-      font-size: 85%;
-      margin: 0;
-      hyphens: manual;
-    }
-    pre {
-      margin: 1em 0;
-      overflow: auto;
-    }
-    pre code {
-      padding: 0;
-      overflow: visible;
-      overflow-wrap: normal;
-    }
-    .sourceCode {
-     background-color: transparent;
-     overflow: visible;
-    }
-    hr {
-      background-color: #1a1a1a;
-      border: none;
-      height: 1px;
-      margin: 1em 0;
-    }
-    table {
-      margin: 1em 0;
-      border-collapse: collapse;
-      width: 100%;
-      overflow-x: auto;
-      display: block;
-      font-variant-numeric: lining-nums tabular-nums;
-    }
-    table caption {
-      margin-bottom: 0.75em;
-    }
-    tbody {
-      margin-top: 0.5em;
-      border-top: 1px solid #1a1a1a;
-      border-bottom: 1px solid #1a1a1a;
-    }
-    th {
-      border-top: 1px solid #1a1a1a;
-      padding: 0.25em 0.5em 0.25em 0.5em;
-    }
-    td {
-      padding: 0.125em 0.5em 0.25em 0.5em;
-    }
-    header {
-      margin-bottom: 4em;
-      text-align: center;
-    }
-    #TOC li {
-      list-style: none;
-    }
-    #TOC ul {
-      padding-left: 1.3em;
-    }
-    #TOC > ul {
-      padding-left: 0;
-    }
-    #TOC a:not(:hover) {
-      text-decoration: none;
-    }
-    code{white-space: pre-wrap;}
-    span.smallcaps{font-variant: small-caps;}
-    div.columns{display: flex; gap: min(4vw, 1.5em);}
-    div.column{flex: auto; overflow-x: auto;}
-    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
-    /* The extra [class] is a hack that increases specificity enough to
-       override a similar rule in reveal.js */
-    ul.task-list[class]{list-style: none;}
-    ul.task-list li input[type="checkbox"] {
-      font-size: inherit;
-      width: 0.8em;
-      margin: 0 0.8em 0.2em -1.6em;
-      vertical-align: middle;
-    }
-    .display.math{display: block; text-align: center; margin: 0.5rem auto;}
-  </style>
-  <style>
-  body{max-width:820px;margin:0 auto;padding:20px 24px 40px;font:15px/1.5 system-ui,"Segoe UI",Arial,sans-serif;color:#222;background:#fff}
-  h1{font-size:24px;border-bottom:2px solid #2f5d8a;padding-bottom:6px;color:#2f5d8a}
-  h2{font-size:18px;margin-top:28px;color:#2f5d8a}
-  table{border-collapse:collapse;width:100%;font-size:13.5px;margin:10px 0}
-  th,td{border:1px solid #c8c8c0;padding:5px 7px;vertical-align:top;text-align:left}
-  th{background:#e9f0f7}
-  code{background:#f3f3ee;padding:1px 4px;border-radius:3px;font-size:13px}
-  a{color:#2f5d8a}
-  hr{border:0;border-top:1px solid #c8c8c0;margin:24px 0}
-  .top{font-size:13px;margin-bottom:12px}
-  h3{font-size:15.5px;margin-top:20px}pre{background:#f3f3ee;padding:8px 10px;border-radius:4px;font-size:13px;overflow-x:auto}</style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+
+ul.task-list[class]{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+font-size: inherit;
+width: 0.8em;
+margin: 0 0.8em 0.2em -1.6em;
+vertical-align: middle;
+}
+.display.math{display: block; text-align: center; margin: 0.5rem auto;}
+</style>
+  <style type="text/css">body{max-width:820px;margin:0 auto;padding:20px 24px 40px;font:15px/1.5 system-ui,"Segoe UI",Arial,sans-serif;color:#222;background:#fff}
+h1{font-size:24px;border-bottom:2px solid #2f5d8a;padding-bottom:6px;color:#2f5d8a}
+h2{font-size:18px;margin-top:28px;color:#2f5d8a}
+table{border-collapse:collapse;width:100%;font-size:13.5px;margin:10px 0}
+th,td{border:1px solid #c8c8c0;padding:5px 7px;vertical-align:top;text-align:left}
+th{background:#e9f0f7}
+code{background:#f3f3ee;padding:1px 4px;border-radius:3px;font-size:13px}
+a{color:#2f5d8a}
+hr{border:0;border-top:1px solid #c8c8c0;margin:24px 0}
+.top{font-size:13px;margin-bottom:12px}
+</style>
 </head>
 <body>
 <p class="top"><a href="index.html">← Avustajaan</a></p>
 <h1 id="hautatietohaun-avustaja-käyttöohje">Hautatietohaun avustaja –
 käyttöohje</h1>
-<p>Versio 0.8 · syyskuu 2026</p>
+<p>Versio 1.0 · syyskuu 2026</p>
 <h2 id="mikä-avustaja-on">Mikä avustaja on</h2>
 <p>Hautatietohaun avustaja on sukututkijan apuväline, joka kokoaa yhteen
-yhdeksän suomalaisia hautatietoja tarjoavaa verkkopalvelua. Avustaja
-kertoo, mistä palveluista etsimäsi kunnan hautausmaat löytyvät, ja avaa
-kunkin palvelun oikeaan kohtaan.</p>
+kymmenen hautatietoja tarjoavaa verkkopalvelua. Haun voi kohdistaa
+Suomeen tai Ruotsiin. Avustaja kertoo, mistä palveluista etsimäsi kunnan
+hautausmaat löytyvät, ja avaa kunkin palvelun oikeaan kohtaan.</p>
 <p>Avustaja ei hae eikä tallenna hautatietoja itse. Kaikki haut tehdään
 palveluiden omilla sivuilla, jotka avautuvat selaimeesi uusiin
 välilehtiin. Mukana olevat palvelut ovat:</p>
@@ -218,10 +75,12 @@ Lappeenranta, Hämeenlinna, Kotka</td>
 </tr>
 <tr class="odd">
 <td>haudat.fi</td>
-<td>Virallinen hautarekisteri (Vitec Katrina). Sama palvelu on ruotsiksi
-osoitteessa gravar.se, joka kattaa myös Ruotsin hautausmaat</td>
-<td>11 pienempää seurakuntaa, mm. Raasepori, Vihti, Inkoo, Muurame,
-Pyhtää, Ranua, Suomussalmi</td>
+<td>Virallinen hautarekisteri (Vitec Katrina). Sama hakukone kattaa myös
+Ruotsin seurakuntien hautausmaat; ruotsinkielinen käyttöliittymä on
+osoitteessa gravar.se</td>
+<td>Suomesta 11 pienempää seurakuntaa, mm. Raasepori, Vihti, Inkoo,
+Muurame, Pyhtää, Ranua, Suomussalmi; Ruotsista noin kolme miljoonaa
+vainajaa</td>
 </tr>
 <tr class="even">
 <td>opasteapp.fi</td>
@@ -257,6 +116,13 @@ n. 27 600 kuvaa</td>
 (Hietaniemessä yli 150 000 muistomerkkiä, monet pienet hautausmaat lähes
 tyhjiä). Kattaa myös ulkomaille haudatut</td>
 </tr>
+<tr class="even">
+<td>Hittagraven</td>
+<td>Tukholman kaupungin hautausmaahallinnon (Kyrkogårdsförvaltningen)
+virallinen hautarekisteri, ruotsinkielinen</td>
+<td>Tukholman kaupungin 11 yleistä hautausmaata, mm. Norra
+begravningsplatsen, Skogskyrkogården ja Bromma (vain Ruotsi-haussa)</td>
+</tr>
 </tbody>
 </table>
 <p>Hautahaku.fi, hautakartta.fi, haudat.fi ja opasteapp.fi kertovat
@@ -265,10 +131,26 @@ hallinta-aika on voimassa. Hautakivitietokanta (Suomen
 Sukututkimusseura), suomenkiha.fi, suvusto.fi, Geneanet ja Find a Grave
 sisältävät usein myös tietoja vanhoista ja maaseutupaikkakuntien
 haudoista. Siksi kannattaa katsoa molemmat.</p>
+<h3 id="kahdenlaisia-hakukoneita">Kahdenlaisia hakukoneita</h3>
+<p>Avustajassa on mukana kahdentyyppisiä hakukoneita, ja ero näkyy
+kattavuuskortissa ja hakulinkkien merkinnöissä.</p>
+<p>Kuntaan kohdistettavat hakukoneet ovat sellaisia, joiden
+hautausmaaluettelo tunnetaan kunnittain. Kun valitset kunnan, avustaja
+kertoo, onko kunnan hautausmaita palvelussa, ja avaa palvelun suoraan
+oikeaan seurakuntaan tai kuntaan. Suomessa näitä ovat hautahaku.fi,
+hautakartta.fi, haudat.fi, opasteapp.fi, suomenkiha.fi,
+Hautakivitietokanta ja suvusto.fi; Ruotsissa haudat.fi, Hittagraven ja
+Geneanet. Merkintä “kunta katettu” tai “ei valittua kuntaa” kertoo
+tilanteen.</p>
+<p>Alueen mukaan kohdistamattomat hakukoneet ovat sellaisia, joissa haku
+tehdään aina koko maasta: avustaja ei tiedä, mitä kuntia palvelussa on,
+joten kuntavalinta ei vaikuta niihin, vaan ne saavat merkinnän “koko
+maa”. Suomessa tällaisia ovat Geneanet ja Find a Grave, Ruotsissa Find a
+Grave. Nämä kannattaa katsoa aina, sillä vainaja on voitu haudata
+muuallekin kuin kotikuntaansa.</p>
 <h2 id="käyttöönotto">Käyttöönotto</h2>
 <p>Avustajaa voi käyttää kahdella tavalla.</p>
-<p>Verkossa: avustajasta on julkaistu toimiva versio osoitteessa <a
-href="https://zygge60.github.io/hautatietohaun-avustaja/">https://zygge60.github.io/hautatietohaun-avustaja/</a>.
+<p>Verkossa: avustajasta on julkaistu toimiva versio osoitteessa <a href="https://zygge60.github.io/hautatietohaun-avustaja/">https://zygge60.github.io/hautatietohaun-avustaja/</a>.
 Se avataan selaimessa kuten mikä tahansa verkkosivu.</p>
 <p>Omalla koneella: avustaja on yksi tiedosto, <code>index.html</code>.
 Tallenna se ja tämä käyttöohje (<code>kayttoohje.html</code>) samaan
@@ -277,16 +159,28 @@ kansioon ja avaa <code>index.html</code> selaimessa kaksoisklikkaamalla
 Käyttöohje-painike avaa tämän ohjeen. Avustaja toimii Chromessa,
 Edgessä, Firefoxissa ja Safarissa.</p>
 <h2 id="hakulomake">Hakulomake</h2>
-<p>Lomakkeessa on viisi kenttää: sukunimi, etunimet, syntymävuosi,
-kuolinvuosi ja kunta. Vähintään sukunimi tai kunta on annettava; muut
-kentät ovat valinnaisia ja tarkentavat hakua niissä palveluissa, jotka
-niitä tukevat.</p>
+<p>Lomakkeessa on kuusi kenttää: sukunimi, etunimet, syntymävuosi,
+kuolinvuosi, maa ja kunta. Vähintään sukunimi tai kunta on annettava;
+muut kentät ovat valinnaisia ja tarkentavat hakua niissä palveluissa,
+jotka niitä tukevat.</p>
+<p><strong>Maa.</strong> Valitse Suomi tai Ruotsi. Valinta määrää, minkä
+maan kunnat kuntakenttä ehdottaa ja mitkä palvelut näytetään.
+Suomi-haussa mukana ovat kaikki suomalaiset palvelut sekä Geneanet ja
+Find a Grave Suomeen rajattuina. Ruotsi-haussa mukana ovat haudat.fi:n
+Ruotsin seurakunnat (sama hakukone kuin gravar.se, noin 310 seurakuntaa
+ja kolme miljoonaa vainajaa), Tukholman kaupungin Hittagraven,
+Geneanetin Ruotsin hautausmaat ja Find a Grave Ruotsiin rajattuna. Maan
+vaihtaminen tyhjentää kuntavalinnan.</p>
 <p><strong>Kunta.</strong> Kirjoita kunnan nimen alku, niin avustaja
-ehdottaa kuntia. Ehdotuksissa on nykyisten kuntien lisäksi lakkautettuja
-kuntia ja pitäjiä (esimerkiksi Nilsiä, Kuru, Snappertuna) sekä
-ruotsinkielisiä nimiä. Valitse kunta klikkaamalla sitä tai siirtymällä
-nuolinäppäimillä ja painamalla Enter. Jos kirjoitat nimen kokonaan ja
-siirryt seuraavaan kenttään, kunta valitaan automaattisesti.</p>
+ehdottaa kuntia. Suomessa ehdotuksissa on nykyisten kuntien lisäksi
+lakkautettuja kuntia ja pitäjiä (esimerkiksi Nilsiä, Kuru, Snappertuna)
+sekä ruotsinkielisiä nimiä. Ruotsissa kuntana on kommun, ja sen voi
+löytää myös seurakunnan, hautausmaan tai postitoimipaikan nimellä:
+esimerkiksi “Häverö” ehdottaa kuntaa Norrtälje. Tukholman kaupungin
+hautausmaat löytyvät kunnalla Stockholm. Valitse kunta klikkaamalla sitä
+tai siirtymällä nuolinäppäimillä ja painamalla Enter. Jos kirjoitat
+nimen kokonaan ja siirryt seuraavaan kenttään, kunta valitaan
+automaattisesti.</p>
 <p>Valitut kunnat näkyvät kentän alla pieninä merkkeinä. Voit valita
 useita kuntia – esimerkiksi suvun kaikki asuinpitäjät – ja poistaa
 kunnan merkin rastista. Jos valitset lakkautetun kunnan, avustaja lisää
@@ -319,17 +213,18 @@ taulukko, jossa on yksi rivi jokaista palvelua kohti. Rivit on
 järjestetty niin, että valitun kunnan kattavat palvelut ovat ensin ja
 palvelut, joissa kuntaa ei ole, himmennettyinä lopussa. Himmennetyt
 palvelut ovat silti käytettävissä, koska vainaja on voitu haudata
-muuallekin kuin kotikuntaansa.</p>
+muuallekin kuin kotikuntaansa. Ruotsi-haussa taulukossa ovat haudat.fi,
+Hittagraven, Geneanet ja Find a Grave.</p>
 <p>Toiminto-sarakkeen painike avaa palvelun uuteen välilehteen.
 Painikkeen teksti kertoo, mitä tapahtuu:</p>
 <p><strong>Avaa haku</strong> – palvelun hakusivu aukeaa hakuehdot
 valmiiksi täytettyinä ja tulokset näkyvissä. Näin toimivat
-Hautakivitietokanta, Geneanet ja Find a Grave. Find a Gravessa haku on
-valmiiksi rajattu Suomeen; jos etsit ulkomaille haudattua, poista
-Finland-rajaus palvelun omalla sivulla. Suvusto.fi:ssä painike avaa
-sukunimen oman sivun, jolla ovat kaikki sen sukunimen hautakivikuvat
-hautausmaittain; jos sukunimeä ei ole aineistossa, sivusto ilmoittaa
-“Sivua ei löydy”.</p>
+Hautakivitietokanta, Geneanet, Find a Grave ja Hittagraven. Find a
+Gravessa haku on valmiiksi rajattu Suomeen; jos etsit ulkomaille
+haudattua, poista Finland-rajaus palvelun omalla sivulla. Suvusto.fi:ssä
+painike avaa sukunimen oman sivun, jolla ovat kaikki sen sukunimen
+hautakivikuvat hautausmaittain; jos sukunimeä ei ole aineistossa,
+sivusto ilmoittaa “Sivua ei löydy”.</p>
 <p><strong>Avaa ja kopioi</strong> – palvelu ei tue valmiiksi täytettyä
 linkkiä. Painike avaa palvelun hakusivun ja kopioi samalla hakusanan
 leikepöydälle oikeassa muodossa. Klikkaa avautuneen sivun hakukenttää ja
@@ -358,11 +253,19 @@ mutta hakusanaksi kannattaa suomenkiha.fi:ssä valita vanha nimi.</p>
 etunimistä tai lempinimi, ja rekistereissä nimet voivat olla eri
 järjestyksessä. Pelkkä sukunimi ja kuolinvuosi on usein toimivampi
 yhdistelmä.</p>
-<p>Ruotsiin haudatut sukulaiset. Haudat.fi:n ruotsinkielinen versio
-gravar.se sisältää saman suomalaisen aineiston lisäksi noin kolme
-miljoonaa Ruotsin hautausmaille haudattua. Jos suvussa on Ruotsiin
-muuttaneita, avaa haudat.fi:n painikkeesta palvelu ja vaihda
-maa-valinnaksi Ruotsi, tai käytä suoraan gravar.se-osoitetta.</p>
+<p>Ruotsiin haudatut sukulaiset. Valitse Maa-kentästä Ruotsi ja kunta,
+jos tiedät sen. Haudat.fi:n hakukone sisältää suomalaisen aineiston
+lisäksi noin kolme miljoonaa Ruotsin seurakuntien hautausmaille
+haudattua: painike avaa valitun seurakunnan sivun ja kopioi sukunimen,
+ja palvelussa valitaan maaksi Ruotsi (sama haku toimii myös
+ruotsinkielisessä käyttöliittymässä gravar.se). Kaikki Ruotsin
+seurakunnat eivät ole mukana, joten kattavuuskortti kannattaa tarkistaa.
+Tukholman kaupungin omat hautausmaat, kuten Norra begravningsplatsen ja
+Skogskyrkogården, ovat kaupungin eivätkä seurakuntien hallinnassa, ja
+niitä haetaan Hittagraven-painikkeella, joka avaa haun valmiiksi
+täytettynä ja rajaa tulokset annettuihin syntymä- ja kuolinvuosiin.
+Hittagravenin aineistossa on aukkoja etenkin Skogskyrkogårdenin
+1940–60-lukujen hautauksissa.</p>
 <p>Muista, mitä rekisteripalvelut eivät näytä. Hautahaku.fi ja
 hautakartta.fi eivät näytä hautoja, joiden hallinta-aika on päättynyt,
 alle kuukausi sitten haudattuja eivätkä yleensä ennen 1900-lukua
@@ -386,7 +289,7 @@ asennetaan komentorivillä komennolla
 kaikki samaan kansioon (kansion nimen voit valita itse):</p>
 <pre><code>template.html               avustajan pohja, johon luettelo upotetaan
 kattavuus.json              nykyinen hautausmaaluettelo
-kunta-vastaavuudet.json     kuntien ja seurakuntien vastaavuustaulukko
+kunta-vastaavuudet.json     kuntien ja seurakuntien vastaavuustaulukko (Suomi ja Ruotsi)
 paivita-kattavuus.py        luettelon päivitysohjelma
 rakenna-avustaja.py         avustajan rakennusohjelma</code></pre>
 <p>Helpoin tapa on ladata GitHubista koko projekti zip-pakettina (Code →
@@ -405,7 +308,10 @@ komennon perään <code>--dry-run</code>.</p>
 <p>Jos ohjelma ilmoittaa lopuksi rivillä “TEHTÄVÄ”, että jollekin
 uudelle seurakunnalle tai postitoimipaikalle puuttuu kuntavastaavuus,
 lisää se <code>kunta-vastaavuudet.json</code>-tiedostoon
-tekstieditorilla tiedoston omien esimerkkien mukaisesti.</p>
+tekstieditorilla tiedoston omien esimerkkien mukaisesti. Ruotsin
+seurakunnat ovat taulukossa <code>haudat_ruotsi_kunnat</code>; jos uutta
+seurakuntaa ei ole lisätty, avustaja käyttää seurakunnan
+postitoimipaikkaa kuntana.</p>
 <h3 id="avustajan-rakentaminen-uudella-luettelolla">Avustajan
 rakentaminen uudella luettelolla</h3>
 <p>Kun luettelo on päivitetty, kokoa avustaja uudelleen samassa
@@ -415,8 +321,7 @@ kansiossa komennolla:</p>
 valmiin <code>index.html</code>-tiedoston (aiempi
 <code>index.html</code> korvataan). Kopioi se (ja
 <code>kayttoohje.html</code>) sinne, mistä käytät avustajaa.</p>
-<h3
-id="vaihtoehto-luettelon-lataaminen-rakentamatta-avustajaa">Vaihtoehto:
+<h3 id="vaihtoehto-luettelon-lataaminen-rakentamatta-avustajaa">Vaihtoehto:
 luettelon lataaminen rakentamatta avustajaa</h3>
 <p>Päivitetyn <code>kattavuus.json</code>-tiedoston voi ottaa käyttöön
 myös rakentamatta avustajaa uudelleen. Avaa avustaja, avaa sivun

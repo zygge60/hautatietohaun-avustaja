@@ -11,10 +11,13 @@ Lähteet:
   hautahaku.fi     sovelluksen JS-paketti (/asset-manifest.json -> main.js), jonka sisällä on
                    hautausmaataulukko JSON.parse('...')-merkkijonona
   haudat.fi        etusivun Suomi-osion maakuntalinkit -> seurakuntasivut (HTML)
+  haudat.fi/Ruotsi etusivun Ruotsi-osion läänilinkit -> seurakuntasivut (HTML); seurakuntasivun
+                   postiosoitteesta poimitaan postitoimipaikka kuntavastaavuutta varten
   suomenkiha.fi    sovelluksen käyttämä Firestore-tietokanta, kokoelma "graveyards"
                    (vain hakemisto: nimi, kunta, tyyppi; ei henkilötietoja)
   genealogia.fi    Hautakivitietokannan hautausmaaluettelo (Google Sheets, CSV-vienti)
-  geneanet         Suomi-sivun maakuntakohtaiset lukumäärät
+  geneanet         Suomi-sivun maakuntakohtaiset lukumäärät ja Ruotsi-sivun kuntakohtaiset lukumäärät
+  hittagraven      Tukholman kaupungin Hittagraven-palvelun hautausmaaluettelo ("Om uppgifterna")
   opasteapp.fi     seurakuntakohtaiset sivut (Vantaa, Kerava, Vihti); tarkistetaan, että ne vastaavat
   suvusto.fi       Haudat-osion sivupalkin kuvauspaikkaluettelo (kunnat ja kuvamäärät)
 
@@ -22,6 +25,7 @@ Käyttö (samassa kansiossa kuin kattavuus.json ja kunta-vastaavuudet.json):
   python paivita-kattavuus.py                 # päivittää kattavuus.json
   python paivita-kattavuus.py --dry-run       # näyttää muutokset, ei kirjoita
   python paivita-kattavuus.py --skip suomenkiha,geneanet,opasteapp,suvusto
+  python paivita-kattavuus.py --only haudat_se,geneanet_se,hittagraven   # vain Ruotsin lähteet
   python paivita-kattavuus.py --only hautakartta
 
 Vaatii Pythonin 3.8+ ja requests-kirjaston (pip install requests).
@@ -186,13 +190,14 @@ def _links(html):
     return res
 
 
-def fetch_haudat():
+def _haudat_section(title):
+    """Lukee haudat.fi:n etusivun osion (h2 "Suomi" tai "Ruotsi") alue- ja seurakuntasivut."""
     base = 'https://haudat.fi'
     html = get(base + '/').text
-    # Suomi-osio: h2 "Suomi" ... h2 "Ruotsi"
-    m = re.search(r'Suomi\s*</h2>(.*?)(?:<h2|$)', html, re.S)
-    section = m.group(1) if m else html
-    regions = [(h, n) for h, n, _ in _links(section) if h.startswith('/region/')]
+    m = re.search(re.escape(title) + r'\s*</h2>(.*?)(?:<h2|$)', html, re.S)
+    if not m:
+        raise ValueError(f'etusivulta ei löytynyt osiota "{title}" (rakenne muuttunut?)')
+    regions = [(h, n) for h, n, _ in _links(m.group(1)) if h.startswith('/region/')]
     seen, out = set(), []
     for rpath, rname in regions:
         if rpath in seen:
@@ -205,10 +210,30 @@ def fetch_haudat():
             phtml = get(base + ppath).text
             cems = [{'name': cn, 'deceased': cnum} for cp, cn, cnum in _links(phtml)
                     if cp.startswith(ppath + '/')]
-            out.append({'region': rpath.split('/')[-1], 'region_name': rname, 'name': pname,
-                        'slug': ppath.split('/')[-1], 'url': base + ppath,
-                        'deceased': pnum, 'cemeteries': cems})
+            # postiosoite: <i class="fa-mailbox"> ... <span>Katu 1<br>12345 Paikka</span>
+            am = re.search(r'fa-mailbox[\s\S]*?<span>([\s\S]*?)</span>', phtml)
+            postort = None
+            if am:
+                addr = re.sub(r'\s+', ' ', am.group(1).replace('<br>', '|').replace('<br/>', '|').replace('<br />', '|')).strip()
+                pm = re.search(r'(\d{3} ?\d{2})\s+([^|]+)$', addr)
+                if pm:
+                    postort = html_mod.unescape(pm.group(2)).strip()
+            rec = {'region': rpath.split('/')[-1], 'region_name': rname, 'name': pname,
+                   'slug': ppath.split('/')[-1], 'url': base + ppath,
+                   'deceased': pnum, 'cemeteries': cems}
+            if title != 'Suomi':
+                rec['postort'] = postort
+            out.append(rec)
     return out
+
+
+def fetch_haudat():
+    return _haudat_section('Suomi')
+
+
+def fetch_haudat_se():
+    """haudat.fi:n Ruotsi-osio: 21 lääniä, n. 310 seurakuntaa/pastoraattia. Sama aineisto kuin gravar.se."""
+    return _haudat_section('Ruotsi')
 
 
 # ---------------------------------------------------------------- suomenkiha.fi
@@ -302,16 +327,45 @@ def fetch_genealogia():
 
 
 # ---------------------------------------------------------------- geneanet
-def fetch_geneanet():
-    html = get('https://fi.geneanet.org/siviilihautausmaa/geo/FIN/suomi').text
+def _geneanet_geo(code, path):
+    html = get(f'https://fi.geneanet.org/siviilihautausmaa/geo/{code}/{path}').text
     regions = {}
-    for m in re.finditer(r'<a[^>]+href="[^"]*/siviilihautausmaa/geo/FIN/[^"]+"[^>]*>([^<]{1,80})</a>\s*\(\s*(\d+)\s*\)', html):
-        txt = re.sub(r'\s+', ' ', m.group(1)).strip()
+    for m in re.finditer(r'<a[^>]+href="[^"]*/siviilihautausmaa/geo/' + code + r'/[^"]+"[^>]*>([^<]{1,80})</a>\s*\(\s*(\d+)\s*\)', html):
+        txt = html_mod.unescape(re.sub(r'\s+', ' ', m.group(1)).strip())
         if txt:
             regions[txt] = int(m.group(2))
     if not regions:
-        raise ValueError('maakuntalukuja ei löytynyt (sivun rakenne muuttunut?)')
+        raise ValueError('aluelukuja ei löytynyt (sivun rakenne muuttunut?)')
     return regions
+
+
+def fetch_geneanet():
+    """Suomi: maakunnittain."""
+    return _geneanet_geo('FIN', 'suomi')
+
+
+def fetch_geneanet_se():
+    """Ruotsi: Geneanet luettelee Ruotsin hautausmaat kunnittain (kommun)."""
+    return _geneanet_geo('SWE', 'ruotsi')
+
+
+# ---------------------------------------------------------------- Hittagraven (Tukholma)
+HITTAGRAVEN_URL = 'https://etjanster.stockholm.se/Hittagraven/home'
+
+
+def fetch_hittagraven():
+    """Tukholman kaupungin hautausmaahallinnon hakupalvelu. Hautausmaaluettelo luetaan
+    "Om uppgifterna i Hittagraven" -sivulta (otsikon "Sökbara begravningsplatser" alla)."""
+    html = get('https://etjanster.stockholm.se/Hittagraven/om-vara-uppgifter').text
+    m = re.search(r'Sökbara begravningsplatser(.*?)Ej sökbara', html, re.S)
+    if not m:
+        raise ValueError('hautausmaaluetteloa ei löytynyt (sivun rakenne muuttunut?)')
+    text = html_mod.unescape(re.sub(r'<[^>]+>', '\n', m.group(1)))
+    names = [t.strip() for t in text.split('\n') if t.strip()]
+    names = [n for n in names if re.search(r'kyrkogård|begravningsplats', n, re.I)]
+    if not names:
+        raise ValueError('hautausmaiden nimiä ei löytynyt')
+    return names
 
 
 # ---------------------------------------------------------------- opasteapp.fi
@@ -405,8 +459,29 @@ def build_index(d, mapping):
     return {k: idx[k] for k in sorted(idx, key=str.lower)}
 
 
+def build_index_se(d, mapping):
+    """Ruotsin kuntaindeksi: kunta (kommun) -> palvelut. haudat.fi:n seurakunnat sijoitetaan
+    kuntiin taulukon haudat_ruotsi_kunnat mukaan; jos seurakuntaa ei ole taulukossa, käytetään
+    seurakuntasivun postitoimipaikkaa (tai seurakunnan nimeä)."""
+    idx = {}
+
+    def add(kunta, key, val):
+        idx.setdefault(kunta, {}).setdefault(key, []).append(val)
+
+    se_kunnat = mapping.get('haudat_ruotsi_kunnat', {})
+    for c in d.get('haudat_se', {}).get('parishes', []):
+        for k in se_kunnat.get(c['slug'], [c.get('postort') or c['name']]):
+            add(k, 'haudat', c['name'])
+    hg = d.get('hittagraven', {})
+    if hg.get('cemeteries'):
+        add(hg.get('kunta', 'Stockholm'), 'hittagraven', f"{len(hg['cemeteries'])} hautausmaata")
+    for k, n in d.get('geneanet_se', {}).get('regions', {}).items():
+        add(k, 'geneanet', f'{n} hautausmaata')
+    return {k: idx[k] for k in sorted(idx, key=str.lower)}
+
+
 DEFAULT_MAPPING = {
-    "_ohje": "Käsin ylläpidettävä vastaavuustaulukko. postitoimipaikka_kunta: hautahaku.fi:n postitoimipaikka -> nykyinen kunta. hautakartta_kunnat / haudat_kunnat: seurakunnan tunnus -> kunnat, joita se kattaa. entinen_kunta: lakkautettu kunta -> nykyinen kunta (kuntaindeksin ristiviittaus). Lisää rivejä, kun päivitysraportti ilmoittaa uusista seurakunnista tai postitoimipaikoista.",
+    "_ohje": "Käsin ylläpidettävä vastaavuustaulukko. postitoimipaikka_kunta: hautahaku.fi:n postitoimipaikka -> nykyinen kunta. hautakartta_kunnat / haudat_kunnat / opasteapp_kunnat: seurakunnan tunnus -> kunnat, joita se kattaa. entinen_kunta: lakkautettu kunta -> nykyinen kunta (kuntaindeksin ristiviittaus). haudat_ruotsi_kunnat: haudat.fi:n Ruotsi-osion seurakunnan tunnus -> Ruotsin kunnat (kommun). Lisää rivejä, kun päivitysraportti ilmoittaa uusista seurakunnista tai postitoimipaikoista.",
     "postitoimipaikka_kunta": {
         "Hiltulanlahti": "Kuopio", "Hirvilahti": "Kuopio", "Jännevirta": "Kuopio", "Vartiala": "Kuopio",
         "Riistavesi": "Kuopio", "Kortejoki": "Kuopio", "Vehmersalmi": "Kuopio", "Räsälä": "Kuopio",
@@ -443,6 +518,7 @@ DEFAULT_MAPPING = {
         "malax-forsamling": ["Maalahti"], "narpes-forsamling": ["Närpiö"], "inga-forsamling": ["Inkoo"],
         "raaseporin-seurakuntayhtyma": ["Raasepori"], "vihdin-seurakunta": ["Vihti"], "pyharannan-seurakunta": ["Pyhäranta"]
     },
+    "haudat_ruotsi_kunnat": {},
     "entinen_kunta": {
         "Nilsiä": "Kuopio", "Juankoski": "Kuopio", "Karttula": "Kuopio", "Maaninka": "Kuopio", "Vehmersalmi": "Kuopio",
         "Riistavesi": "Kuopio", "Karjalohja": "Lohja", "Nummi-Pusula": "Lohja", "Sammatti": "Lohja",
@@ -475,6 +551,9 @@ def names_by_service(d):
     out['hautakivitietokanta'] = {g['kunta']: {g['photographed']} for g in d.get('genealogia', {}).get('municipalities', [])}
     out['opasteapp'] = {c['name']: set(c.get('kunnat', [])) for c in d.get('opasteapp', {}).get('instances', [])}
     out['suvusto'] = {c['kunta']: {c['photos']} for c in d.get('suvusto', {}).get('municipalities', [])}
+    out['haudat_se'] = {c['name']: {x['name'] for x in c['cemeteries']} for c in d.get('haudat_se', {}).get('parishes', [])}
+    out['geneanet_se'] = {k: {n} for k, n in d.get('geneanet_se', {}).get('regions', {}).items()}
+    out['hittagraven'] = {'Stockholm': set(d.get('hittagraven', {}).get('cemeteries', []))}
     return out
 
 
@@ -484,11 +563,11 @@ def diff(old, new):
     for svc in n:
         oc, nc = o.get(svc, {}), n[svc]
         for k in sorted(set(nc) - set(oc)):
-            lines.append(f'{svc}: UUSI {k} ({len(nc[k])} kohdetta)' if svc in ('hautahaku', 'hautakartta', 'haudat') else f'{svc}: UUSI {k}')
+            lines.append(f'{svc}: UUSI {k} ({len(nc[k])} kohdetta)' if svc in ('hautahaku', 'hautakartta', 'haudat', 'haudat_se', 'hittagraven') else f'{svc}: UUSI {k}')
         for k in sorted(set(oc) - set(nc)):
             lines.append(f'{svc}: POISTUNUT {k}')
         for k in sorted(set(nc) & set(oc)):
-            if svc in ('hautahaku', 'hautakartta', 'haudat'):
+            if svc in ('hautahaku', 'hautakartta', 'haudat', 'haudat_se', 'hittagraven'):
                 for c in sorted(nc[k] - oc[k]):
                     lines.append(f'{svc}: {k}: uusi hautausmaa {c}')
                 for c in sorted(oc[k] - nc[k]):
@@ -502,7 +581,7 @@ def diff(old, new):
 def main():
     ap = argparse.ArgumentParser(description='Päivitä hautahakupalveluiden kattavuustiedot')
     ap.add_argument('--dry-run', action='store_true', help='näytä muutokset, älä kirjoita tiedostoja')
-    ap.add_argument('--skip', default='', help='ohitettavat lähteet pilkuilla: hautahaku,hautakartta,haudat,suomenkiha,genealogia,geneanet')
+    ap.add_argument('--skip', default='', help='ohitettavat lähteet pilkuilla: hautahaku,hautakartta,haudat,suomenkiha,genealogia,geneanet,opasteapp,suvusto,haudat_se,geneanet_se,hittagraven')
     ap.add_argument('--only', default='', help='päivitä vain nämä lähteet')
     args = ap.parse_args()
     skip = {s.strip() for s in args.skip.split(',') if s.strip()}
@@ -535,6 +614,10 @@ def main():
         'geneanet': old.get('geneanet', {'url': 'https://fi.geneanet.org/siviilihautausmaa/geo/FIN/suomi', 'regions': {}}),
         'opasteapp': old.get('opasteapp', {'url': 'https://www.opasteapp.fi/', 'instances': []}),
         'suvusto': old.get('suvusto', {'url': 'https://suvusto.fi/haudat/', 'municipalities': []}),
+        # Ruotsi
+        'haudat_se': old.get('haudat_se', {'url': 'https://haudat.fi/', 'note': 'haudat.fi:n Ruotsi-osio (sama hakukone kuin gravar.se)', 'parishes': []}),
+        'geneanet_se': old.get('geneanet_se', {'url': 'https://fi.geneanet.org/siviilihautausmaa/geo/SWE/ruotsi', 'regions': {}}),
+        'hittagraven': old.get('hittagraven', {'url': HITTAGRAVEN_URL, 'kunta': 'Stockholm', 'cemeteries': []}),
     }
     # säilytä vanhat lähdeaikaleimat
     new['sources'] = dict(old.get('sources', {}))
@@ -548,6 +631,9 @@ def main():
         ('geneanet', lambda: (lambda r: {'url': 'https://fi.geneanet.org/siviilihautausmaa/geo/FIN/suomi', 'regions': r, 'total_cemeteries': sum(r.values())})(fetch_geneanet())),
         ('opasteapp', lambda: {'url': 'https://www.opasteapp.fi/', 'instances': fetch_opasteapp()}),
         ('suvusto', lambda: {'url': 'https://suvusto.fi/haudat/', 'municipalities': fetch_suvusto()}),
+        ('haudat_se', lambda: {'url': 'https://haudat.fi/', 'note': 'haudat.fi:n Ruotsi-osio (sama hakukone kuin gravar.se)', 'parishes': fetch_haudat_se()}),
+        ('geneanet_se', lambda: (lambda r: {'url': 'https://fi.geneanet.org/siviilihautausmaa/geo/SWE/ruotsi', 'regions': r, 'total_cemeteries': sum(r.values())})(fetch_geneanet_se())),
+        ('hittagraven', lambda: {'url': HITTAGRAVEN_URL, 'kunta': 'Stockholm', 'cemeteries': fetch_hittagraven()}),
     ]
     for name, fn in steps:
         if not active(name):
@@ -556,7 +642,7 @@ def main():
         print(f'{name}: noudetaan ...', flush=True)
         try:
             res = fn()
-            n = len(res.get('congregations') or res.get('parishes') or res.get('municipalities') or res.get('regions') or res.get('instances') or [])
+            n = len(res.get('congregations') or res.get('parishes') or res.get('municipalities') or res.get('regions') or res.get('instances') or res.get('cemeteries') or [])
             if n == 0:
                 raise ValueError('nouto palautti tyhjän luettelon')
             new[name] = res
@@ -567,6 +653,7 @@ def main():
             new['sources'][name] = {'fetched': dt.datetime.now().isoformat(timespec='minutes'), 'ok': False, 'error': str(e)}
 
     new['kuntaindeksi'] = build_index(new, mapping)
+    new['kuntaindeksi_se'] = build_index_se(new, mapping)
 
     changes = diff(old, new) if old else ['(ensimmäinen ajo, ei vertailtavaa)']
     # uudet postitoimipaikat / seurakunnat, joille ei ole vastaavuutta
@@ -575,7 +662,9 @@ def main():
     unknown_hk = sorted(c['slug'] for c in new['hautakartta']['congregations'] if c['slug'] not in mapping['hautakartta_kunnat'])
     unknown_hd = sorted(c['slug'] for c in new['haudat']['parishes'] if c['slug'] not in mapping['haudat_kunnat'])
     unknown_oa = sorted(c['slug'] for c in new.get('opasteapp', {}).get('instances', []) if c['slug'] not in mapping.get('opasteapp_kunnat', {}))
+    unknown_se = sorted(c['slug'] for c in new.get('haudat_se', {}).get('parishes', []) if c['slug'] not in mapping.get('haudat_ruotsi_kunnat', {}))
     todo = []
+    if unknown_se: todo.append('Lisää Ruotsin kunnat näille haudat.fi:n Ruotsi-osion seurakunnille (haudat_ruotsi_kunnat): ' + ', '.join(unknown_se))
     if unknown_po: todo.append('Tarkista kunta näille hautahaku.fi:n postitoimipaikoille (kunta-vastaavuudet.json): ' + ', '.join(unknown_po))
     if unknown_hk: todo.append('Lisää kunnat näille hautakartta.fi-seurakunnille: ' + ', '.join(unknown_hk))
     if unknown_hd: todo.append('Lisää kunnat näille haudat.fi-seurakunnille: ' + ', '.join(unknown_hd))

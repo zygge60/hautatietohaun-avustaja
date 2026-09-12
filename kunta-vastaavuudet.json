@@ -1,5 +1,5 @@
 {
- "_ohje": "Käsin ylläpidettävä vastaavuustaulukko. postitoimipaikka_kunta: hautahaku.fi:n postitoimipaikka -> nykyinen kunta. hautakartta_kunnat / haudat_kunnat / opasteapp_kunnat: seurakunnan tunnus -> kunnat, joita se kattaa. entinen_kunta: lakkautettu kunta -> nykyinen kunta (kuntaindeksin ristiviittaus). Lisää rivejä, kun päivitysraportti ilmoittaa uusista seurakunnista tai postitoimipaikoista.",
+ "_ohje": "Käsin ylläpidettävä vastaavuustaulukko. postitoimipaikka_kunta: hautahaku.fi:n postitoimipaikka -> nykyinen kunta. hautakartta_kunnat / haudat_kunnat / opasteapp_kunnat: seurakunnan tunnus -> kunnat, joita se kattaa. entinen_kunta: lakkautettu kunta -> nykyinen kunta (kuntaindeksin ristiviittaus). Lisää rivejä, kun päivitysraportti ilmoittaa uusista seurakunnista tai postitoimipaikoista. haudat_ruotsi_kunnat: haudat.fi:n Ruotsi-osion seurakunnan tunnus -> Ruotsin kunnat (kommun), joita se kattaa; jos tunnus puuttuu, avustaja käyttää seurakuntasivun postitoimipaikkaa.",
  "postitoimipaikka_kunta": {
   "Hiltulanlahti": "Kuopio",
   "Hirvilahti": "Kuopio",
@@ -264,6 +264,952 @@
   ],
   "hautausmaa-vihti": [
    "Vihti"
+  ]
+ },
+ "haudat_ruotsi_kunnat": {
+  "kyrkhults-forsamling": [
+   "Olofström"
+  ],
+  "fridlevstads-forsamling": [
+   "Karlskrona"
+  ],
+  "mjallby-forsamling": [
+   "Sölvesborg"
+  ],
+  "nattraby-hasslo-forsamling": [
+   "Karlskrona"
+  ],
+  "rodeby-forsamling": [
+   "Karlskrona"
+  ],
+  "bjursas-forsamling": [
+   "Falun"
+  ],
+  "gagnefs-pastorat": [
+   "Gagnef"
+  ],
+  "barke-pastorat": [
+   "Smedjebacken"
+  ],
+  "grange-safsnas-forsamling": [
+   "Ludvika"
+  ],
+  "hedemora-husby-och-garpenbergs-forsamling": [
+   "Hedemora"
+  ],
+  "leksands-pastorat": [
+   "Leksand"
+  ],
+  "ludvika-forsamling": [
+   "Ludvika"
+  ],
+  "malungs-forsamling": [
+   "Malung-Sälen"
+  ],
+  "mora-kyrkogardsforvaltning": [
+   "Mora"
+  ],
+  "orsa-forsamling": [
+   "Orsa"
+  ],
+  "rattviks-pastorat": [
+   "Rättvik"
+  ],
+  "svardsjo-envikens-sundborns-pastorat": [
+   "Falun"
+  ],
+  "burs-pastorat": [
+   "Gotland"
+  ],
+  "eskelhems-pastorat": [
+   "Gotland"
+  ],
+  "fardhem-garde-pastorat": [
+   "Gotland"
+  ],
+  "norra-gotlands-pastorat-kyrkogardforvaltningen": [
+   "Gotland"
+  ],
+  "romaklosters-pastorat": [
+   "Gotland"
+  ],
+  "stenkumla-forsamling": [
+   "Gotland"
+  ],
+  "sudrets-pastorat": [
+   "Gotland"
+  ],
+  "visby-kyrkogards-och-fastighetsforvaltning": [
+   "Gotland"
+  ],
+  "alfta-kyrkogardar": [
+   "Ovanåker"
+  ],
+  "bollnas-pastorat": [
+   "Bollnäs"
+  ],
+  "dellenbygdens-pastorat": [
+   "Hudiksvall"
+  ],
+  "forsa-hogs-forsamling": [
+   "Hudiksvall"
+  ],
+  "gastrikekustens-pastorat": [
+   "Gävle"
+  ],
+  "hofors-forsamling": [
+   "Hofors"
+  ],
+  "hudiksvallsbygdens-forsaml": [
+   "Hudiksvall"
+  ],
+  "ljusnans-pastorat": [
+   "Ljusdal"
+  ],
+  "ovansjo-jarbo-pastorat": [
+   "Sandviken"
+  ],
+  "ovanakers-kyrkogardar": [
+   "Ovanåker"
+  ],
+  "soderala-pastorat": [
+   "Söderhamn"
+  ],
+  "soderhamn-sandarne-forsamling": [
+   "Söderhamn"
+  ],
+  "torsakers-forsamling": [
+   "Hofors"
+  ],
+  "fjaras-forlanda-forsamling": [
+   "Kungsbacka"
+  ],
+  "getinge-oskarstroms-pastorat": [
+   "Halmstad"
+  ],
+  "himledalens-forsamling": [
+   "Varberg"
+  ],
+  "hyltebruks-pastorat": [
+   "Hylte"
+  ],
+  "kyrkogardsforvaltningen-i-loftadalen": [
+   "Kungsbacka"
+  ],
+  "laholms-pastorat": [
+   "Laholm"
+  ],
+  "lindberga-forsamling": [
+   "Varberg"
+  ],
+  "onsala-kyrkogard": [
+   "Kungsbacka"
+  ],
+  "snostorps-forsamling": [
+   "Halmstad"
+  ],
+  "sondrum-vapno-forsamling": [
+   "Halmstad"
+  ],
+  "traslovs-forsamling": [
+   "Varberg"
+  ],
+  "tvaakers-pastorat": [
+   "Varberg"
+  ],
+  "varbergs-forsamling": [
+   "Varberg"
+  ],
+  "veddige-kungsaters-forsamling": [
+   "Varberg"
+  ],
+  "varo-stravalla-forsamling": [
+   "Varberg"
+  ],
+  "haggenas-lit-kyrkas-forsamling": [
+   "Östersund"
+  ],
+  "froso-sunne-nordero-forsamling": [
+   "Östersund"
+  ],
+  "krokoms-pastorat": [
+   "Krokom"
+  ],
+  "are-pastorat": [
+   "Åre"
+  ],
+  "stromsunds-pastorat": [
+   "Strömsund"
+  ],
+  "ostersunds-forsamling": [
+   "Östersund"
+  ],
+  "aneby-pastorat": [
+   "Aneby"
+  ],
+  "bankeryds-forsamling": [
+   "Jönköping"
+  ],
+  "bredaryds-pastorat": [
+   "Värnamo"
+  ],
+  "barnarp-odestugu-forsamling": [
+   "Jönköping"
+  ],
+  "byarums-pastorat": [
+   "Vaggeryd"
+  ],
+  "forshedabygdens-forsamling": [
+   "Värnamo"
+  ],
+  "gnosjo-pastorat": [
+   "Gnosjö"
+  ],
+  "granna-visingso-pastorat": [
+   "Jönköping"
+  ],
+  "habo-pastorat": [
+   "Habo"
+  ],
+  "huskvarna-pastorat": [
+   "Jönköping"
+  ],
+  "lekeryds-forsamling": [
+   "Jönköping"
+  ],
+  "norrahammars-forsamling": [
+   "Jönköping"
+  ],
+  "norra-mo-forsamling": [
+   "Jönköping"
+  ],
+  "nassjo-pastorat": [
+   "Nässjö"
+  ],
+  "rogberga-oggestorps-forsamling": [
+   "Jönköping"
+  ],
+  "rydaholms-forsamling": [
+   "Värnamo"
+  ],
+  "skillingaryds-forsamling": [
+   "Vaggeryd"
+  ],
+  "skarstad-olmstad-forsamling": [
+   "Jönköping"
+  ],
+  "sodra-vedbo-pastorat-kyrkogardsforvaltn": [
+   "Eksjö"
+  ],
+  "vetlanda-pastorat-kyrkogard": [
+   "Vetlanda"
+  ],
+  "voxtorps-pastorat": [
+   "Värnamo"
+  ],
+  "varnamo-forsamling": [
+   "Värnamo"
+  ],
+  "doderhults-forsamling": [
+   "Oskarshamn"
+  ],
+  "dorby-hossmo-pastorat": [
+   "Kalmar"
+  ],
+  "emmaboda-pastorat": [
+   "Emmaboda"
+  ],
+  "forlosa-klackeberga-forsamling": [
+   "Kalmar"
+  ],
+  "sodermore-pastorat": [
+   "Kalmar"
+  ],
+  "sodra-vi-djursdala-forsamling": [
+   "Vimmerby"
+  ],
+  "sodra-olands-pastorat": [
+   "Mörbylånga"
+  ],
+  "torsas-pastorat": [
+   "Torsås"
+  ],
+  "alvesta-forsamling": [
+   "Alvesta"
+  ],
+  "berga-pastorat": [
+   "Ljungby"
+  ],
+  "markaryds-forsamling": [
+   "Markaryd"
+  ],
+  "moheda-pastorat": [
+   "Alvesta"
+  ],
+  "stenbrohults-kyrkogardsforvaltning": [
+   "Älmhult"
+  ],
+  "traryd-hinneryd-pastorat": [
+   "Markaryd"
+  ],
+  "traryd-hinneryds-pastorat": [
+   "Markaryd"
+  ],
+  "vislanda-bladinge-forsamling": [
+   "Alvesta"
+  ],
+  "arjeplog-arvidsjaurs-pastorat": [
+   "Arjeplog",
+   "Arvidsjaur"
+  ],
+  "bodens-pastorat": [
+   "Boden"
+  ],
+  "haparanda-forsamling": [
+   "Haparanda"
+  ],
+  "hortlax-forsamling": [
+   "Piteå"
+  ],
+  "jokkmokks-forsamling": [
+   "Jokkmokk"
+  ],
+  "kalix-forsamling": [
+   "Kalix"
+  ],
+  "norrfjardens-forsamling": [
+   "Piteå"
+  ],
+  "pajala-forsamling": [
+   "Pajala"
+  ],
+  "pitea-forsamling": [
+   "Piteå"
+  ],
+  "overkalix-forsamling": [
+   "Överkalix"
+  ],
+  "allerums-pastorat": [
+   "Helsingborg"
+  ],
+  "anderslovs-forsamling": [
+   "Trelleborg"
+  ],
+  "araslovs-forsamling": [
+   "Kristianstad"
+  ],
+  "barkakra-forsamling": [
+   "Ängelholm"
+  ],
+  "bjuvs-forsamling": [
+   "Bjuv"
+  ],
+  "bjarnums-pastorat": [
+   "Hässleholm"
+  ],
+  "bjarreds-forsamling": [
+   "Lomma"
+  ],
+  "blentarps-forsamling": [
+   "Sjöbo"
+  ],
+  "bjornekulla-vastra-broby-forsamling": [
+   "Åstorp"
+  ],
+  "broby-emmislovs-forsamling": [
+   "Östra Göinge"
+  ],
+  "brunnby-forsamling": [
+   "Höganäs"
+  ],
+  "bastad-ostra-karups-forsamling": [
+   "Båstad"
+  ],
+  "brosarp-tranas-forsamling": [
+   "Tomelilla"
+  ],
+  "dalby-forsamling": [
+   "Lund"
+  ],
+  "dalkopinge-forsamling": [
+   "Trelleborg"
+  ],
+  "degeberga-everods-forsamling": [
+   "Kristianstad"
+  ],
+  "dosjebro-forsamling": [
+   "Kävlinge"
+  ],
+  "fjalkinge-forsamling": [
+   "Kristianstad"
+  ],
+  "forslov-grevie-forsamling": [
+   "Båstad"
+  ],
+  "genarps-forsamling": [
+   "Lund"
+  ],
+  "glimakra-hjarsas-forsamling": [
+   "Östra Göinge"
+  ],
+  "garsnas-forsamling": [
+   "Simrishamn"
+  ],
+  "hammarlovs-forsamling": [
+   "Trelleborg"
+  ],
+  "hjarnarp-tastarps-forsamling": [
+   "Ängelholm"
+  ],
+  "hassleholms-kyrkogardsforvaltning": [
+   "Hässleholm"
+  ],
+  "hoganas-forsamling": [
+   "Höganäs"
+  ],
+  "horby-forsamling-kyrkogardsforvaltningen": [
+   "Hörby"
+  ],
+  "hoors-forsamling": [
+   "Höör"
+  ],
+  "kiviks-forsamling": [
+   "Simrishamn"
+  ],
+  "klippans-pastorat": [
+   "Klippan"
+  ],
+  "knislinge-pastorat": [
+   "Östra Göinge"
+  ],
+  "kristianstads-pastorat": [
+   "Kristianstad"
+  ],
+  "kropps-forsamling": [
+   "Helsingborg",
+   "Bjuv"
+  ],
+  "kvidinge-forsamling-2520009834": [
+   "Åstorp"
+  ],
+  "kulla-pastorat": [
+   "Höganäs"
+  ],
+  "kvistofta-forsamling": [
+   "Helsingborg",
+   "Landskrona"
+  ],
+  "kallstorps-forsamling": [
+   "Trelleborg"
+  ],
+  "kavlinge-forsamling": [
+   "Kävlinge"
+  ],
+  "kagerod-rostanga-forsamling": [
+   "Svalöv"
+  ],
+  "lackalanga-stavie-forsamling": [
+   "Kävlinge"
+  ],
+  "ljunits-forsamling": [
+   "Ystad"
+  ],
+  "lomma-forsamling": [
+   "Lomma"
+  ],
+  "loderups-forsamling": [
+   "Ystad"
+  ],
+  "lovestads-forsamling": [
+   "Sjöbo"
+  ],
+  "munka-ljungby-forsamling": [
+   "Ängelholm"
+  ],
+  "nosaby-forsamling": [
+   "Kristianstad"
+  ],
+  "nasets-pastorat": [
+   "Vellinge"
+  ],
+  "oppmanna-vanga-forsamling": [
+   "Kristianstad"
+  ],
+  "osby-pastorat": [
+   "Osby"
+  ],
+  "perstorps-forsamling": [
+   "Perstorp"
+  ],
+  "simrishamns-forsamling": [
+   "Simrishamn"
+  ],
+  "ringsjo-forsamling": [
+   "Höör"
+  ],
+  "sjobo-forsamling": [
+   "Sjöbo"
+  ],
+  "skivarps-forsamling": [
+   "Skurup"
+  ],
+  "skurups-forsamling": [
+   "Skurup"
+  ],
+  "stora-kopinge-forsamling": [
+   "Ystad"
+  ],
+  "smedstorps-forsamling": [
+   "Tomelilla"
+  ],
+  "strovelstorps-forsamling": [
+   "Ängelholm"
+  ],
+  "sodra-sandby-forsamling": [
+   "Lund"
+  ],
+  "svalovsbygdens-pastorat": [
+   "Svalöv"
+  ],
+  "svedala-forsamling": [
+   "Svedala"
+  ],
+  "sosdala-forsamling": [
+   "Hässleholm"
+  ],
+  "tollarps-forsamling": [
+   "Kristianstad"
+  ],
+  "teckomatorps-forsamling": [
+   "Svalöv"
+  ],
+  "tomelillabygdens-forsamling": [
+   "Tomelilla"
+  ],
+  "trelleborgs-kyrkogardsforvaltning": [
+   "Trelleborg"
+  ],
+  "tyringe-forsamling": [
+   "Hässleholm"
+  ],
+  "uppakra-forsamling": [
+   "Staffanstorp"
+  ],
+  "veberods-forsamling": [
+   "Lund"
+  ],
+  "vellinge-manstorps-forsamling": [
+   "Vellinge"
+  ],
+  "villie-forsamling": [
+   "Skurup"
+  ],
+  "vinslovs-forsamling": [
+   "Hässleholm"
+  ],
+  "vittsjo-verums-pastorat": [
+   "Hässleholm"
+  ],
+  "vollsjo-forsaml": [
+   "Sjöbo"
+  ],
+  "va-skepparslovs-pastorat": [
+   "Kristianstad"
+  ],
+  "varby-forsamling": [
+   "Svedala"
+  ],
+  "ahus-forsamling": [
+   "Kristianstad"
+  ],
+  "orkelljunga-pastorat": [
+   "Örkelljunga"
+  ],
+  "orkened-forsamling": [
+   "Osby"
+  ],
+  "djuro-moja-och-namdo-forsamling": [
+   "Värmdö"
+  ],
+  "faringso-forsamling": [
+   "Ekerö"
+  ],
+  "grodinge-forsamling": [
+   "Botkyrka"
+  ],
+  "hedvig-eleonora-forsamling": [
+   "Stockholm"
+  ],
+  "katolska-kyrkogarden-i-stockholm": [
+   "Solna"
+  ],
+  "kyrkogardsforvaltningen-i-gustavsberg-ingaro-forsamling": [
+   "Värmdö"
+  ],
+  "lidingo-forsamling": [
+   "Lidingö"
+  ],
+  "nacka-forsamling": [
+   "Nacka"
+  ],
+  "roslagens-vastra-pastorat": [
+   "Norrtälje"
+  ],
+  "sigtuna-forsamling": [
+   "Sigtuna"
+  ],
+  "solna-kyrkogardsforvaltning": [
+   "Solna"
+  ],
+  "sundbybergs-forsamling": [
+   "Sundbyberg"
+  ],
+  "turinge-taxinge-forsamling": [
+   "Nykvarn"
+  ],
+  "varmdo-forsamling-kyrkogardsforvaltning": [
+   "Värmdö"
+  ],
+  "vastermalms-forsamling": [
+   "Stockholm"
+  ],
+  "frustuna-forsamling": [
+   "Gnesta"
+  ],
+  "husby-rekarne-och-nashulta-pastorat": [
+   "Eskilstuna"
+  ],
+  "hallby-forsamling-med-tumbo-och-raby-rekarne": [
+   "Eskilstuna"
+  ],
+  "mariefreds-kyrkogardsforvaltning": [
+   "Strängnäs"
+  ],
+  "mellosa-forsamling": [
+   "Flen"
+  ],
+  "oxelosunds-forsamling-kyrkogardsforvaltningen": [
+   "Oxelösund"
+  ],
+  "rono-forsamling": [
+   "Nyköping"
+  ],
+  "torshalla-forsamling": [
+   "Eskilstuna"
+  ],
+  "v-vingakers-o-osterakers-pastorat": [
+   "Vingåker"
+  ],
+  "trosa-forsamling": [
+   "Trosa"
+  ],
+  "aker-lanna-forsamling": [
+   "Strängnäs"
+  ],
+  "almunge-pastorat": [
+   "Uppsala"
+  ],
+  "balingsta-pastorat": [
+   "Uppsala"
+  ],
+  "bjorklinge-skuttunge-viksta-pastorat": [
+   "Uppsala"
+  ],
+  "gimo-pastorat": [
+   "Östhammar"
+  ],
+  "norra-hagunda-forsamling": [
+   "Uppsala"
+  ],
+  "rasbo-pastorat": [
+   "Uppsala"
+  ],
+  "tierp-soderfors-forsamling": [
+   "Tierp"
+  ],
+  "vattholma-pastorat": [
+   "Uppsala"
+  ],
+  "vittinge-forsamling": [
+   "Heby"
+  ],
+  "vasterlovsta-pastorat": [
+   "Heby"
+  ],
+  "ostervala-harbo-pastorat": [
+   "Heby"
+  ],
+  "eda-kola-kyrkogardsforvaltning": [
+   "Eda"
+  ],
+  "eksharads-forsamling": [
+   "Hagfors"
+  ],
+  "fryksande-pastorat": [
+   "Torsby"
+  ],
+  "grums-pastorat": [
+   "Grums"
+  ],
+  "hagfors-pastorat": [
+   "Hagfors"
+  ],
+  "nordmarkens-pastorat": [
+   "Årjäng"
+  ],
+  "storfors-forsamling": [
+   "Storfors"
+  ],
+  "burea-forsamling": [
+   "Skellefteå"
+  ],
+  "burtrask-lovangers-pastorat": [
+   "Skellefteå"
+  ],
+  "hornefors-forsamling": [
+   "Umeå"
+  ],
+  "mala-sorsele-pastorat": [
+   "Malå",
+   "Sorsele"
+  ],
+  "skelleftea-st-orjan": [
+   "Skellefteå"
+  ],
+  "nordmalings-forsamling": [
+   "Nordmaling"
+  ],
+  "skelleftea-pastorat": [
+   "Skellefteå"
+  ],
+  "tarna-forsamling": [
+   "Storuman"
+  ],
+  "kramfors-pastorat": [
+   "Kramfors"
+  ],
+  "medelpad-norra-pastorat": [
+   "Sundsvall",
+   "Timrå"
+  ],
+  "medelpads-sodra-pastorat": [
+   "Sundsvall"
+  ],
+  "medelpad-sodra-pastorat": [
+   "Ånge"
+  ],
+  "ornskoldsviks-norra-pastorat": [
+   "Örnsköldsvik"
+  ],
+  "ornskoldsvik-sodra-pastorat": [
+   "Örnsköldsvik"
+  ],
+  "hallstahammar-kolbacks-forsamling": [
+   "Hallstahammar"
+  ],
+  "skinnskatteberg-med-hed-och-gunnilbo": [
+   "Skinnskatteberg"
+  ],
+  "bjarke-forsamling": [
+   "Alingsås"
+  ],
+  "amneharad-lyrestads-pastorat": [
+   "Gullspång",
+   "Mariestad"
+  ],
+  "bjorketorps-forsamling": [
+   "Härryda"
+  ],
+  "bralandabygdens-forsamling": [
+   "Vänersborg"
+  ],
+  "dals-eds-forsamling": [
+   "Dals-Ed"
+  ],
+  "essunga-pastorat": [
+   "Essunga"
+  ],
+  "frandefors-forsamling": [
+   "Vänersborg"
+  ],
+  "fargelanda-hogsater-forsamling": [
+   "Färgelanda"
+  ],
+  "gotene-pastorat": [
+   "Götene"
+  ],
+  "herrljungabygdens-forsamling": [
+   "Herrljunga"
+  ],
+  "karlsborgs-pastorat": [
+   "Karlsborg"
+  ],
+  "kinds-pastorat": [
+   "Tranemo"
+  ],
+  "kinna-fritsla-forsamling": [
+   "Mark"
+  ],
+  "kungalv-ytterby-forsamling": [
+   "Kungälv"
+  ],
+  "landvetter-harryda-pastorat": [
+   "Härryda"
+  ],
+  "kyrkogardsforvaltningen-artemarks-pastorat": [
+   "Bengtsfors"
+  ],
+  "lilla-edets-pastorat": [
+   "Lilla Edet"
+  ],
+  "lindome-forsamling": [
+   "Mölndal"
+  ],
+  "lugnas-ullervads-pastorat": [
+   "Mariestad"
+  ],
+  "lysekils-pastorat": [
+   "Lysekil"
+  ],
+  "norra-billings-pastorat": [
+   "Skövde"
+  ],
+  "nodinge-forsamling": [
+   "Ale"
+  ],
+  "redvags-forsamling": [
+   "Ulricehamn"
+  ],
+  "rommele-forsamling": [
+   "Trollhättan"
+  ],
+  "skara-pastorat": [
+   "Skara"
+  ],
+  "skepplanda-pastorat": [
+   "Ale"
+  ],
+  "spekerod-ucklums-forsamling": [
+   "Stenungsund"
+  ],
+  "sotenas-pastorat": [
+   "Sotenäs"
+  ],
+  "stenstorps-pastorat": [
+   "Falköping"
+  ],
+  "steneby-forsamling": [
+   "Bengtsfors"
+  ],
+  "stenungsunds-pastorat": [
+   "Stenungsund"
+  ],
+  "savare-forsamling": [
+   "Lidköping"
+  ],
+  "sodra-kallands-pastorat": [
+   "Lidköping"
+  ],
+  "sodra-vings-pastorat": [
+   "Ulricehamn"
+  ],
+  "tanums-pastorat": [
+   "Tanum"
+  ],
+  "tibro-pastorat": [
+   "Tibro"
+  ],
+  "tjorns-pastorat": [
+   "Tjörn"
+  ],
+  "torestorps-pastorat": [
+   "Mark"
+  ],
+  "vanersborg-och-vane-ryrs-forsamling": [
+   "Vänersborg"
+  ],
+  "varsas-pastorat": [
+   "Skövde"
+  ],
+  "vastra-marks-forsamling": [
+   "Mark"
+  ],
+  "vargarda-pastorat-kyrkogard": [
+   "Vårgårda"
+  ],
+  "amals-forsamling": [
+   "Åmål"
+  ],
+  "orby-skene-forsamling": [
+   "Mark"
+  ],
+  "asker-lannas-forsamling": [
+   "Örebro"
+  ],
+  "askersunds-pastorat": [
+   "Askersund"
+  ],
+  "bodarne-pastorat": [
+   "Laxå"
+  ],
+  "hallefors-hjulsjo-kyrkogardsforvaltning": [
+   "Hällefors"
+  ],
+  "knista-forsamling": [
+   "Lekeberg"
+  ],
+  "kvismare-forsamling": [
+   "Örebro"
+  ],
+  "linde-ljusnarsbergs-pastorat": [
+   "Lindesberg",
+   "Ljusnarsberg"
+  ],
+  "noraskogs-pastorat": [
+   "Nora"
+  ],
+  "sodra-bergslagens-pastorat": [
+   "Karlskoga",
+   "Degerfors"
+  ],
+  "tysslinge-forsamling": [
+   "Örebro"
+  ],
+  "viby-forsamling": [
+   "Hallsberg"
+  ],
+  "borensbergs-pastorat": [
+   "Motala"
+  ],
+  "griftegardsforvaltningen-i-motala-forsamling": [
+   "Motala"
+  ],
+  "kinda-pastorat": [
+   "Kinda"
+  ],
+  "karna-forsamling": [
+   "Linköping"
+  ],
+  "rimforsa-forsamling": [
+   "Kinda"
+  ],
+  "soderkoping-st-anna-forsamling": [
+   "Söderköping"
+  ],
+  "vadstena-kyrkogardsforvaltning": [
+   "Vadstena"
+  ],
+  "vikingstads-forsamling": [
+   "Linköping"
+  ],
+  "vist-vardnas-pastorat": [
+   "Linköping"
+  ],
+  "akerbo-forsamling": [
+   "Linköping"
+  ],
+  "atvids-forsamling": [
+   "Åtvidaberg"
   ]
  }
 }
